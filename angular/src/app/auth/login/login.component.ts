@@ -31,8 +31,7 @@ import { AuthService } from "src/app/shared/services/auth.service";
       `,
     ],
 })
-export class LoginComponent implements OnDestroy {
-    private ngUnsubscribe = new Subject<void>();
+export class LoginComponent {
     valCheck: string[] = ['remember'];
 
     password!: string;
@@ -58,16 +57,10 @@ export class LoginComponent implements OnDestroy {
         };
         this.authService
             .login(request)
-            .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe(res => {
                 localStorage.setItem(ACCESS_TOKEN, res.access_token);
                 localStorage.setItem(REFRESH_TOKEN, res.refresh_token);
-                this.router.navigate(['']);
+                this.router.navigate(['/']);
             });
-    }
-
-    ngOnDestroy(): void {
-        this.ngUnsubscribe.next();
-        this.ngUnsubscribe.complete();
     }
 }
