@@ -10,6 +10,11 @@ const routes: Routes = [
     component: AppLayoutComponent
   },
   {
+    path: 'product',
+    loadChildren: () => import('./product/product.module').then(m => m.ProductModule),
+    component: AppLayoutComponent
+  },
+  {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
