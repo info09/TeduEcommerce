@@ -41,7 +41,7 @@ namespace TeduEcommerce.Admin.Products
             var totalCount = await AsyncExecuter.LongCountAsync(query);
             var data = await AsyncExecuter.ToListAsync(query.Skip(input.SkipCount).Take(input.MaxResultCount));
             var result = ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data);
-
+ 
             return new PagedResultDto<ProductInListDto>(totalCount, result);
         }
     }
