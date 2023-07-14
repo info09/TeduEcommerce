@@ -55,7 +55,7 @@
         <td>{{ row.isActive }}</td>
       </tr>
     </ng-template>
-    <<ng-template pTemplate="summary">
+    <ng-template pTemplate="summary">
       <div style="text-align: left;">Tổng số bản ghi: {{totalCount | number}}</div>
     </ng-template>
     
@@ -63,5 +63,7 @@
   <!--Paginator-->
   <p-paginator [rows]="maxResultCount" [totalRecords]="totalCount" (onPageChange)="pageChange($event)" [rowsPerPageOptions]="[10, 20, 30, 50, 100]"></p-paginator>
   <!--Block UI-->
-  <p-blockUI [blocked]="blockedPanel" [target]="pnl"></p-blockUI>
+  <p-blockUI [blocked]="blockedPanel" [target]="pnl">
+    <p-progressSpinner></p-progressSpinner>
+  </p-blockUI>
 </p-panel>
