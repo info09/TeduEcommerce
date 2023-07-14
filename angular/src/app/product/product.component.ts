@@ -1,5 +1,6 @@
 import { AuthService, PagedResultDto } from '@abp/ng.core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ProductCategoriesService, ProductCategoryInListDto } from '@proxy/product-categories';
 import { ProductInListDto, ProductService } from '@proxy/products';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Subject, takeUntil } from 'rxjs';
@@ -19,19 +20,26 @@ export class ProductComponent implements OnInit, OnDestroy {
   public maxResultCount: number = 10;
   public totalCount: number;
 
-  constructor(private productService: ProductService) { }
+  //Filter
+  productCategories: any[] = [];
+  keyword: string = '';
+  categoryId: string = '';
+
+  constructor(private productService: ProductService, private productCategoryService: ProductCategoriesService) { }
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
   ngOnInit(): void {
+    this.loadProductCategories();
     this.loadData();
   }
 
   loadData() {
     this.productService
       .getListFilter({
-        keyword: '',
+        keyword: this.keyword,
+        categoryId: this.categoryId,
         maxResultCount: this.maxResultCount,
         skipCount: this.skipCount,
       })
@@ -42,6 +50,19 @@ export class ProductComponent implements OnInit, OnDestroy {
           this.totalCount = response.totalCount;
         },
         error: () => { },
+      });
+  }
+
+  loadProductCategories(){
+    this.productCategoryService.getListAll()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((response: ProductCategoryInListDto[]) => {
+        response.forEach(element => {
+          this.productCategories.push({
+            value: element.id,
+            name: element.name
+          })
+        })
       });
   }
 

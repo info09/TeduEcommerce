@@ -7,20 +7,34 @@ using TeduEcommerce.ProductCategories;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.Uow;
 
 namespace TeduEcommerce.Admin.ProductCategories
 {
     public class ProductCategoriesAppService : CrudAppService<ProductCategory, ProductCategoryDto, Guid, PagedResultRequestDto, CreateUpdateProductCategoryDto, CreateUpdateProductCategoryDto>, IProductCategoriesAppService
     {
-        private readonly IRepository<ProductCategory, Guid> _productCategoryRepository;
         public ProductCategoriesAppService(IRepository<ProductCategory, Guid> repository) : base(repository)
         {
-            _productCategoryRepository = repository;
+        }
+
+        public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
+        {
+            await Repository.DeleteManyAsync(ids);
+            await UnitOfWorkManager.Current.SaveChangesAsync();
+        }
+
+        public async Task<List<ProductCategoryInListDto>> GetListAllAsync()
+        {
+            var query = await Repository.GetQueryableAsync();
+            query = query.Where(i => i.IsActive);
+            var data = await AsyncExecuter.ToListAsync(query);
+
+            return ObjectMapper.Map<List<ProductCategory>, List<ProductCategoryInListDto>>(data);
         }
 
         public async Task<PagedResultDto<ProductCategoryInListDto>> GetListFilterAsync(BaseListFilterDto input)
         {
-            var query = await _productCategoryRepository.GetQueryableAsync();
+            var query = await Repository.GetQueryableAsync();
 
             query = query.WhereIf(!string.IsNullOrWhiteSpace(input.Keyword), i => i.Name.Trim().ToLower().Contains(input.Keyword.Trim().ToLower()));
 

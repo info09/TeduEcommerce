@@ -8,7 +8,7 @@ namespace TeduEcommerce.Admin.Products
 {
     public interface IProductAppService : ICrudAppService<ProductDto, Guid, PagedResultRequestDto, CreateUpdateProductDto, CreateUpdateProductDto>
     {
-        Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(BaseListFilterDto input);
+        Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input);
         Task<List<ProductInListDto>> GetListAllAsync();
         Task DeleteMutipleAsync(IEnumerable<Guid> ids);
     }

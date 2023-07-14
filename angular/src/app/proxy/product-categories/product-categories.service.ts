@@ -9,7 +9,7 @@ import type { BaseListFilterDto } from '../models';
 })
 export class ProductCategoriesService {
   apiName = 'Default';
-
+  
 
   create = (input: CreateUpdateProductCategoryDto) =>
     this.restService.request<any, ProductCategoryDto>({
@@ -17,24 +17,33 @@ export class ProductCategoriesService {
       url: '/api/app/product-categories',
       body: input,
     },
-      { apiName: this.apiName });
-
+    { apiName: this.apiName });
+  
 
   delete = (id: string) =>
     this.restService.request<any, void>({
       method: 'DELETE',
       url: `/api/app/product-categories/${id}`,
     },
-      { apiName: this.apiName });
+    { apiName: this.apiName });
+  
 
+  deleteMultiple = (ids: string[]) =>
+    this.restService.request<any, void>({
+      method: 'DELETE',
+      url: '/api/app/product-categories/multiple',
+      params: { ids },
+    },
+    { apiName: this.apiName });
+  
 
   get = (id: string) =>
     this.restService.request<any, ProductCategoryDto>({
       method: 'GET',
       url: `/api/app/product-categories/${id}`,
     },
-      { apiName: this.apiName });
-
+    { apiName: this.apiName });
+  
 
   getList = (input: PagedResultRequestDto) =>
     this.restService.request<any, PagedResultDto<ProductCategoryDto>>({
@@ -42,17 +51,25 @@ export class ProductCategoriesService {
       url: '/api/app/product-categories',
       params: { maxResultCount: input.maxResultCount, skipCount: input.skipCount },
     },
-      { apiName: this.apiName });
+    { apiName: this.apiName });
+  
 
+  getListAll = () =>
+    this.restService.request<any, ProductCategoryInListDto[]>({
+      method: 'GET',
+      url: '/api/app/product-categories/all',
+    },
+    { apiName: this.apiName });
+  
 
   getListFilter = (input: BaseListFilterDto) =>
     this.restService.request<any, PagedResultDto<ProductCategoryInListDto>>({
       method: 'GET',
       url: '/api/app/product-categories/filter',
-      params: { keyword: input.keyword, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
+      params: { skipCount: input.skipCount, maxResultCount: input.maxResultCount, keyword: input.keyword },
     },
-      { apiName: this.apiName });
-
+    { apiName: this.apiName });
+  
 
   update = (id: string, input: CreateUpdateProductCategoryDto) =>
     this.restService.request<any, ProductCategoryDto>({
@@ -60,7 +77,7 @@ export class ProductCategoriesService {
       url: `/api/app/product-categories/${id}`,
       body: input,
     },
-      { apiName: this.apiName });
+    { apiName: this.apiName });
 
-  constructor(private restService: RestService) { }
+  constructor(private restService: RestService) {}
 }
