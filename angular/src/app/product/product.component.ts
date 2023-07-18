@@ -1,9 +1,11 @@
-import { AuthService, PagedResultDto } from '@abp/ng.core';
+import { PagedResultDto } from '@abp/ng.core';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ProductCategoriesService, ProductCategoryInListDto } from '@proxy/product-categories';
-import { ProductInListDto, ProductService } from '@proxy/products';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { ProductDto, ProductInListDto, ProductService } from '@proxy/products';
 import { Subject, takeUntil } from 'rxjs';
+import { NotificationService } from '../shared/services/notification.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import {ProductDetailComponent  } from './product-detail.component';
 
 @Component({
   selector: 'app-product',
@@ -25,7 +27,10 @@ export class ProductComponent implements OnInit, OnDestroy {
   keyword: string = '';
   categoryId: string = '';
 
-  constructor(private productService: ProductService, private productCategoryService: ProductCategoriesService) { }
+  constructor(private productService: ProductService, 
+              private productCategoryService: ProductCategoriesService, 
+              private notificationSevice: NotificationService, 
+              private dialogService: DialogService) { }
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
@@ -51,16 +56,14 @@ export class ProductComponent implements OnInit, OnDestroy {
           this.totalCount = response.totalCount;
           this.toggleBlockUI(false);
         },
-        error: () => { 
+        error: () => {
           this.toggleBlockUI(false);
         },
       });
   }
 
-  loadProductCategories(){
-    this.productCategoryService.getListAll()
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((response: ProductCategoryInListDto[]) => {
+  loadProductCategories() {
+    this.productCategoryService.getListAll().subscribe((response: ProductCategoryInListDto[]) => {
         response.forEach(element => {
           this.productCategories.push({
             value: element.id,
@@ -76,10 +79,24 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.loadData();
   }
 
-  private toggleBlockUI(enable:boolean){
-    if(enable == true){
+  showAddModal() {
+    const ref = this.dialogService.open(ProductDetailComponent, {
+      header: 'Thêm mới sản phẩm',
+      width: '70%'
+    });
+
+    ref.onClose.subscribe((data: ProductDto) => {
+      if (data) {
+        this.loadData();
+        this.notificationSevice.showSuccess('Thêm sản phẩm thành công');
+      }
+    })
+  }
+
+  private toggleBlockUI(enable: boolean) {
+    if (enable == true) {
       this.blockedPanel = true;
-    }else{
+    } else {
       setTimeout(() => {
         this.blockedPanel = false;
       }, 1000);
