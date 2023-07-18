@@ -16,10 +16,11 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { EditorModule } from 'primeng/editor';
+import { TeduSharedModule } from '../shared/modules/tedu-shared.module';
 
 @NgModule({
   declarations: [ProductComponent, ProductDetailComponent],
-  imports: [SharedModule, ProductRoutingModule, PanelModule, TableModule, PaginatorModule, BlockUIModule, ButtonModule, DropdownModule, InputTextModule, ProgressSpinnerModule, DynamicDialogModule, InputNumberModule, CheckboxModule, InputTextareaModule, EditorModule],
+  imports: [SharedModule, ProductRoutingModule, PanelModule, TableModule, PaginatorModule, BlockUIModule, ButtonModule, DropdownModule, InputTextModule, ProgressSpinnerModule, DynamicDialogModule, InputNumberModule, CheckboxModule, InputTextareaModule, EditorModule, TeduSharedModule],
   entryComponents: [ProductDetailComponent]
 })
 export class ProductModule { }
