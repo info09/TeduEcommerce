@@ -16,6 +16,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
   blockedPanel: boolean = false;
   items: ProductInListDto[] = [];
+  public selectedItems: ProductInListDto[] = [];
 
   //Paging variable
   public skipCount: number = 0;
@@ -29,12 +30,13 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   constructor(private productService: ProductService, 
               private productCategoryService: ProductCategoriesService, 
-              private notificationSevice: NotificationService, 
+              private notificationService: NotificationService, 
               private dialogService: DialogService) { }
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
+
   ngOnInit(): void {
     this.loadProductCategories();
     this.loadData();
@@ -82,15 +84,40 @@ export class ProductComponent implements OnInit, OnDestroy {
   showAddModal() {
     const ref = this.dialogService.open(ProductDetailComponent, {
       header: 'Thêm mới sản phẩm',
-      width: '70%'
+      width: '70%',
     });
 
     ref.onClose.subscribe((data: ProductDto) => {
       if (data) {
         this.loadData();
-        this.notificationSevice.showSuccess('Thêm sản phẩm thành công');
+        this.notificationService.showSuccess('Thêm sản phẩm thành công');
+        this.selectedItems = [];
       }
-    })
+    });
+  }
+
+  showEditModal() {
+    if (this.selectedItems.length == 0) {
+      this.notificationService.showError('Bạn phải chọn một bản ghi');
+      return;
+    }
+    const id = this.selectedItems[0].id;
+    const ref = this.dialogService.open(ProductDetailComponent, {
+      data: {
+        id: id,
+      },
+      header: 'Cập nhật sản phẩm',
+      width: '70%',
+    });
+
+    ref.onClose.subscribe((data: ProductDto) => {
+      if (data) {
+        debugger;
+        this.loadData();
+        this.selectedItems = [];
+        this.notificationService.showSuccess('Cập nhật sản phẩm thành công');
+      }
+    });
   }
 
   private toggleBlockUI(enable: boolean) {

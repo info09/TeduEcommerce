@@ -1,22 +1,21 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { ManufacturerInListDto, ManufacturersService } from "@proxy/manufacturers";
-import { ProductCategoriesService, ProductCategoryInListDto } from "@proxy/product-categories";
-import { ProductDto, ProductService } from "@proxy/products";
-import { Subject, forkJoin, takeUntil } from "rxjs";
-import { UtilityService } from "../shared/services/utility.service";
-import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
-import { productTypeOptions } from "@proxy/tedu-ecommerce/products";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ManufacturerInListDto, ManufacturersService } from '@proxy/manufacturers';
+import { ProductCategoriesService, ProductCategoryInListDto } from '@proxy/product-categories';
+import { ProductDto, ProductService,  } from '@proxy/products';
+import { productTypeOptions } from '@proxy/tedu-ecommerce/products';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { forkJoin, Subject, takeUntil } from 'rxjs';
+import { UtilityService } from '../shared/services/utility.service';
 
 @Component({
   selector: 'app-product-detail',
-  templateUrl: './product-detail.component.html'
+  templateUrl: './product-detail.component.html',
 })
 export class ProductDetailComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject<void>();
   blockedPanel: boolean = false;
   btnDisabled = false;
-
   public form: FormGroup;
 
   //Dropdown
@@ -25,17 +24,16 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   productTypes: any[] = [];
   selectedEntity = {} as ProductDto;
 
-  constructor(private productService: ProductService, 
-    private productCategoryService: ProductCategoriesService, 
-    private fb: FormBuilder,
+  constructor(
+    private productService: ProductService,
+    private productCategoryService: ProductCategoriesService,
     private manufacturerService: ManufacturersService,
-    private utilService: UtilityService,
+    private fb: FormBuilder,
     private config: DynamicDialogConfig,
-    private ref: DynamicDialogRef) { }
-  ngOnDestroy(): void {
-    throw new Error("Method not implemented.");
-  }
-  
+    private ref: DynamicDialogRef,
+    private utilService: UtilityService
+  ) {}
+
   validationMessages = {
     code: [{ type: 'required', message: 'Bạn phải nhập mã duy nhất' }],
     name: [
@@ -44,56 +42,64 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     ],
     slug: [{ type: 'required', message: 'Bạn phải URL duy nhất' }],
     sku: [{ type: 'required', message: 'Bạn phải mã SKU sản phẩm' }],
-    manufacturerId:[{ type: 'required', message: 'Bạn phải chọn nhà cung cấp' }],
+    manufacturerId: [{ type: 'required', message: 'Bạn phải chọn nhà cung cấp' }],
     categoryId: [{ type: 'required', message: 'Bạn phải chọn danh mục' }],
     productType: [{ type: 'required', message: 'Bạn phải chọn loại sản phẩm' }],
     sortOrder: [{ type: 'required', message: 'Bạn phải nhập thứ tự' }],
-    sellPrice: [{ type: 'required', message: 'Bạn phải nhập giá bán' }]
+    sellPrice: [{ type: 'required', message: 'Bạn phải nhập giá bán' }],
   };
-  
+
+  ngOnDestroy(): void {}
 
   ngOnInit(): void {
     this.buildForm();
     this.loadProductTypes();
+    this.initFormData();
+  }
 
-    //Load data to formr
+  generateSlug() {
+    this.form.controls['slug'].setValue(this.utilService.MakeSeoTitle(this.form.get('name').value));
+  }
+
+  initFormData() {
+    //Load data to form
     var productCategories = this.productCategoryService.getListAll();
     var manufacturers = this.manufacturerService.getListAll();
     this.toggleBlockUI(true);
-
     forkJoin({
       productCategories,
-      manufacturers
-    }).pipe(takeUntil(this.ngUnsubscribe))
-    .subscribe({
-      next: (response: any) => {
-        //Push data to dropdown
-        var productCategories = response.productCategories as ProductCategoryInListDto[];
-        var manufacturers = response.manufacturers as ManufacturerInListDto[];
-        productCategories.forEach(element => {
-          this.productCategories.push({
-            value: element.id,
-            label: element.name,
+      manufacturers,
+    })
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
+        next: (response: any) => {
+          //Push data to dropdown
+          var productCategories = response.productCategories as ProductCategoryInListDto[];
+          var manufacturers = response.manufacturers as ManufacturerInListDto[];
+          productCategories.forEach(element => {
+            this.productCategories.push({
+              value: element.id,
+              label: element.name,
+            });
           });
-        });
 
-        manufacturers.forEach(element => {
-          this.manufacturers.push({
-            value: element.id,
-            label: element.name,
+          manufacturers.forEach(element => {
+            this.manufacturers.push({
+              value: element.id,
+              label: element.name,
+            });
           });
-        });
-        //Load edit data to form
-        if (this.utilService.isEmpty(this.config.data?.id) == true) {
+          //Load edit data to form
+          if (this.utilService.isEmpty(this.config.data?.id) == true) {
+            this.toggleBlockUI(false);
+          } else {
+            this.loadFormDetails(this.config.data?.id);
+          }
+        },
+        error: () => {
           this.toggleBlockUI(false);
-        } else {
-          this.loadFormDetails(this.config.data?.id);
-        }
-      },
-      error: () => {
-        this.toggleBlockUI(false);
-      },
-    });
+        },
+      });
   }
 
   loadFormDetails(id: string) {
@@ -112,10 +118,37 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         },
       });
   }
-
   saveChange() {
+    this.toggleBlockUI(true);
 
+    if (this.utilService.isEmpty(this.config.data?.id) == true) {
+      this.productService
+        .create(this.form.value)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe({
+          next: () => {
+            this.toggleBlockUI(false);
 
+            this.ref.close(this.form.value);
+          },
+          error: () => {
+            this.toggleBlockUI(false);
+          },
+        });
+    } else {
+      this.productService
+        .update(this.config.data?.id, this.form.value)
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe({
+          next: () => {
+            this.toggleBlockUI(false);
+            this.ref.close(this.form.value);
+          },
+          error: () => {
+            this.toggleBlockUI(false);
+          },
+        });
+    }
   }
 
   loadProductTypes() {
@@ -144,7 +177,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       productType: new FormControl(this.selectedEntity.productType || null, Validators.required),
       sortOrder: new FormControl(this.selectedEntity.sortOrder || null, Validators.required),
       sellPrice: new FormControl(this.selectedEntity.sellPrice || null, Validators.required),
-      visibility: new FormControl(this.selectedEntity.visiblity || true),
+      visibility: new FormControl(this.selectedEntity.visibility || true),
       isActive: new FormControl(this.selectedEntity.isActive || true),
       seoMetaDescription: new FormControl(this.selectedEntity.seoMetaDescription || null),
       description: new FormControl(this.selectedEntity.description || null),
@@ -161,9 +194,5 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.btnDisabled = false;
       }, 1000);
     }
-  }
-
-  generateSlug(){
-    this.form.controls['slug'].setValue(this.utilService.MakeSeoTitle(this.form.get('name').value));
   }
 }
