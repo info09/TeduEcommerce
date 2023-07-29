@@ -1,8 +1,12 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { ManufacturerInListDto, ManufacturersService } from "@proxy/manufacturers";
 import { ProductCategoriesService, ProductCategoryInListDto } from "@proxy/product-categories";
 import { ProductDto, ProductService } from "@proxy/products";
-import { Subject, takeUntil } from "rxjs";
+import { Subject, forkJoin, takeUntil } from "rxjs";
+import { UtilityService } from "../shared/services/utility.service";
+import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
+import { productTypeOptions } from "@proxy/tedu-ecommerce/products";
 
 @Component({
   selector: 'app-product-detail',
@@ -21,7 +25,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   productTypes: any[] = [];
   selectedEntity = {} as ProductDto;
 
-  constructor(private productService: ProductService, private productCategoryService: ProductCategoriesService, private fb: FormBuilder) { }
+  constructor(private productService: ProductService, 
+    private productCategoryService: ProductCategoriesService, 
+    private fb: FormBuilder,
+    private manufacturerService: ManufacturersService,
+    private utilService: UtilityService,
+    private config: DynamicDialogConfig,
+    private ref: DynamicDialogRef) { }
   ngOnDestroy(): void {
     throw new Error("Method not implemented.");
   }
@@ -44,6 +54,46 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.buildForm();
+    this.loadProductTypes();
+
+    //Load data to formr
+    var productCategories = this.productCategoryService.getListAll();
+    var manufacturers = this.manufacturerService.getListAll();
+    this.toggleBlockUI(true);
+
+    forkJoin({
+      productCategories,
+      manufacturers
+    }).pipe(takeUntil(this.ngUnsubscribe))
+    .subscribe({
+      next: (response: any) => {
+        //Push data to dropdown
+        var productCategories = response.productCategories as ProductCategoryInListDto[];
+        var manufacturers = response.manufacturers as ManufacturerInListDto[];
+        productCategories.forEach(element => {
+          this.productCategories.push({
+            value: element.id,
+            label: element.name,
+          });
+        });
+
+        manufacturers.forEach(element => {
+          this.manufacturers.push({
+            value: element.id,
+            label: element.name,
+          });
+        });
+        //Load edit data to form
+        if (this.utilService.isEmpty(this.config.data?.id) == true) {
+          this.toggleBlockUI(false);
+        } else {
+          this.loadFormDetails(this.config.data?.id);
+        }
+      },
+      error: () => {
+        this.toggleBlockUI(false);
+      },
+    });
   }
 
   loadFormDetails(id: string) {
@@ -68,13 +118,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   }
 
-  loadProductCategories() {
-    this.productCategoryService.getListAll().subscribe((response: ProductCategoryInListDto[]) => {
-      response.forEach(element => {
-        this.productCategories.push({
-          value: element.id,
-          name: element.name,
-        });
+  loadProductTypes() {
+    productTypeOptions.forEach(element => {
+      this.productTypes.push({
+        value: element.value,
+        label: element.key,
       });
     });
   }
@@ -113,5 +161,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.btnDisabled = false;
       }, 1000);
     }
+  }
+
+  generateSlug(){
+    this.form.controls['slug'].setValue(this.utilService.MakeSeoTitle(this.form.get('name').value));
   }
 }
