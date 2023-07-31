@@ -6,6 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { NotificationService } from '../shared/services/notification.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import {ProductDetailComponent  } from './product-detail.component';
+import { ProductType } from '@proxy/tedu-ecommerce/products';
 
 @Component({
   selector: 'app-product',
@@ -118,6 +119,10 @@ export class ProductComponent implements OnInit, OnDestroy {
         this.notificationService.showSuccess('Cập nhật sản phẩm thành công');
       }
     });
+  }
+
+  getProductTypeName(value: number){
+    return ProductType[value];
   }
 
   private toggleBlockUI(enable: boolean) {

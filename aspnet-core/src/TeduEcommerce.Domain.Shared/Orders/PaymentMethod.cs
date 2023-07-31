@@ -2,9 +2,9 @@
 {
     public enum PaymentMethod
     {
-        COD,
-        OnlinePayment,
-        TransferByBank,
-        CreditCard
+        COD = 1,
+        OnlinePayment = 2,
+        TransferByBank = 3,
+        CreditCard = 4
     }
 }

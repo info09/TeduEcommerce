@@ -11,7 +11,6 @@ export class ValidationMessageComponent implements OnInit {
     @Input() validationMessages: any;
     constructor() { }
     ngOnInit(): void {
-        throw new Error('Method not implemented.');
     }
 
 
