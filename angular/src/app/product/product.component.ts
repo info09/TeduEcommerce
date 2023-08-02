@@ -67,6 +67,10 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   loadProductCategories() {
     this.productCategoryService.getListAll().subscribe((response: ProductCategoryInListDto[]) => {
+      this.productCategories.push({
+        value: '',
+        label: 'Chọn danh mục'
+      });
         response.forEach(element => {
           this.productCategories.push({
             value: element.id,
