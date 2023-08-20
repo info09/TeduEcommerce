@@ -7,6 +7,7 @@ import { NotificationService } from '../shared/services/notification.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import {ProductDetailComponent  } from './product-detail.component';
 import { ProductType } from '@proxy/tedu-ecommerce/products';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-product',
@@ -32,7 +33,8 @@ export class ProductComponent implements OnInit, OnDestroy {
   constructor(private productService: ProductService, 
               private productCategoryService: ProductCategoriesService, 
               private notificationService: NotificationService, 
-              private dialogService: DialogService) { }
+              private dialogService: DialogService,
+              private confirmationService: ConfirmationService) { }
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
@@ -123,6 +125,38 @@ export class ProductComponent implements OnInit, OnDestroy {
         this.notificationService.showSuccess('Cập nhật sản phẩm thành công');
       }
     });
+  }
+
+  deleteItems(){
+    if(this.selectedItems.length == 0){
+      this.notificationService.showError('Phải chọn ít nhất 1 bản ghi');
+      return;
+    }
+    var ids = [];
+    this.selectedItems.forEach(items => {
+      ids.push(items.id);
+    });
+    this.confirmationService.confirm({
+      message: 'Bạn có chắc muốn xóa bản ghi này?',
+      accept: ()=> {
+        this.deleteItemsConfirm(ids);
+      }
+    })
+  }
+
+  deleteItemsConfirm(ids: string[]){
+    this.toggleBlockUI(true);
+    this.productService.deleteMutiple(ids).pipe(takeUntil(this.ngUnsubscribe)).subscribe({
+      next: ()=> {
+        this.notificationService.showSuccess('Xóa thành công');
+        this.loadData();
+        this.selectedItems = [];
+        this.toggleBlockUI(false);
+      },
+      error: ()=> {
+        this.toggleBlockUI(false);
+      }
+    })
   }
 
   getProductTypeName(value: number){
