@@ -11,5 +11,7 @@ namespace TeduEcommerce.Admin.Products
         Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input);
         Task<List<ProductInListDto>> GetListAllAsync();
         Task DeleteMutipleAsync(IEnumerable<Guid> ids);
+
+        Task<string> GetThumbnailImageAsync(string fileName);
     }
 }

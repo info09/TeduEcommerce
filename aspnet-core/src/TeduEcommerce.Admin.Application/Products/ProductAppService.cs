@@ -29,7 +29,7 @@ namespace TeduEcommerce.Admin.Products
         {
             var product = await _productManager.CreateAsync(input.ManufacturerId, input.Name, input.Code, input.Slug, input.ProductType, input.SKU,
                 input.SortOrder, input.Visibility, input.IsActive, input.CategoryId, input.SeoMetaDescription, input.Description, input.SellPrice);
-            
+
             if (input.ThumbnailPictureContent != null && input.ThumbnailPictureContent.Length > 0)
             {
                 await SaveThumbnailImageAsync(input.ThumbnailPictureName, input.ThumbnailPictureContent);
@@ -54,8 +54,8 @@ namespace TeduEcommerce.Admin.Products
             product.SortOrder = input.SortOrder;
             product.Visibility = input.Visibility;
             product.IsActive = input.IsActive;
-            
-            if(product.CategoryId != input.CategoryId)
+
+            if (product.CategoryId != input.CategoryId)
             {
                 product.CategoryId = input.CategoryId;
                 var category = await _productCategoryRepository.GetAsync(i => i.Id == input.CategoryId);
@@ -63,7 +63,7 @@ namespace TeduEcommerce.Admin.Products
                 product.CategorySlug = category?.Slug;
             }
             product.SeoMetaDescription = input.Description;
-            if(input.ThumbnailPictureContent != null && input.ThumbnailPictureContent.Length > 0) 
+            if (input.ThumbnailPictureContent != null && input.ThumbnailPictureContent.Length > 0)
             {
                 await SaveThumbnailImageAsync(input.ThumbnailPictureName, input.ThumbnailPictureContent);
                 product.ThumbnailPicture = input.ThumbnailPictureName;
@@ -111,6 +111,18 @@ namespace TeduEcommerce.Admin.Products
             base64 = regex.Replace(base64, string.Empty);
             byte[] bytes = Convert.FromBase64String(base64);
             await _fileContainer.SaveAsync(fileName, bytes, overrideExisting: true);
+        }
+
+        public async Task<string> GetThumbnailImageAsync(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName)) return null;
+
+            var thumbnailContent = await _fileContainer.GetAllBytesOrNullAsync(fileName);
+
+            if (thumbnailContent == null) return null;
+
+            var result = Convert.ToBase64String(thumbnailContent);
+            return result;
         }
     }
 }

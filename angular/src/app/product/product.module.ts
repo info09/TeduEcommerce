@@ -18,10 +18,11 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { EditorModule } from 'primeng/editor';
 import { TeduSharedModule } from '../shared/modules/tedu-shared.module';
 import { BadgeModule } from 'primeng/badge'
+import { ImageModule } from 'primeng/image'
 
 @NgModule({
   declarations: [ProductComponent, ProductDetailComponent],
-  imports: [SharedModule, ProductRoutingModule, PanelModule, TableModule, PaginatorModule, BlockUIModule, ButtonModule, DropdownModule, InputTextModule, ProgressSpinnerModule, DynamicDialogModule, InputNumberModule, CheckboxModule, InputTextareaModule, EditorModule, TeduSharedModule, BadgeModule],
+  imports: [SharedModule, ProductRoutingModule, PanelModule, TableModule, PaginatorModule, BlockUIModule, ButtonModule, DropdownModule, InputTextModule, ProgressSpinnerModule, DynamicDialogModule, InputNumberModule, CheckboxModule, InputTextareaModule, EditorModule, TeduSharedModule, BadgeModule, ImageModule],
   entryComponents: [ProductDetailComponent]
 })
 export class ProductModule { }
