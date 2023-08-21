@@ -83,7 +83,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   pageChange(event: any): void {
-    this.skipCount = (event - 1) * this.maxResultCount;
+    this.skipCount = (event.pageCount - 1) * this.maxResultCount;
     this.maxResultCount = event.rows;
     this.loadData();
   }
@@ -119,7 +119,6 @@ export class ProductComponent implements OnInit, OnDestroy {
 
     ref.onClose.subscribe((data: ProductDto) => {
       if (data) {
-        debugger;
         this.loadData();
         this.selectedItems = [];
         this.notificationService.showSuccess('Cập nhật sản phẩm thành công');

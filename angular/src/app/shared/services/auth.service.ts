@@ -29,12 +29,19 @@ export class AuthService {
     );
   }
 
-  public isAuthenticated():boolean{
-    return localStorage.getItem(ACCESS_TOKEN) != null;
-  }
+  public refreshToken(refreshToken: string): Observable<LoginResponseDto> {
+    var body = {
+      client_id: environment.oAuthConfig.clientId,
+      client_secret: environment.oAuthConfig.dummyClientSecret,
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken
+    };
 
-  public logout(){
-    localStorage.removeItem(ACCESS_TOKEN);
-    localStorage.removeItem(REFRESH_TOKEN);
+    const data = Object.keys(body).map((key, index) => `${key}=${encodeURIComponent(body[key])}`).join('&');
+    return this.httpClient.post<LoginResponseDto>(
+      environment.oAuthConfig.issuer + 'connect/token',
+      data,
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+    );
   }
 }

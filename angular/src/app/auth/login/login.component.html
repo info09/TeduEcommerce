@@ -10,7 +10,7 @@
                     <span class="text-600 font-medium">Đăng nhập</span>
                 </div>
 
-                <div class="w-full md:w-10 mx-auto" [formGroup]="loginForm">
+                <form class="w-full md:w-10 mx-auto" [formGroup]="loginForm">
                     <label for="email1" class="block text-900 text-xl font-medium mb-2">Email</label>
                     <input id="email1" formControlName="username" type="text" placeholder="Địa chỉ email" pInputText class="w-full mb-3" style="padding:1rem;">
 
@@ -18,7 +18,10 @@
                     <p-password id="password1" formControlName="password" placeholder="Mật khẩu" [toggleMask]="true" styleClass="w-full mb-3"></p-password>
 
                     <button pButton pRipple (click)="login()" label="Đăng nhập" class="w-full p-3 text-xl"></button>
-                </div>
+                </form>
+                <p-blockUI [blocked]="blockedPanel">
+                    <p-progressSpinner></p-progressSpinner>
+                </p-blockUI>
             </div>
         </div>
     </div>
