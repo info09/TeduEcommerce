@@ -36,6 +36,15 @@ export class ProductService {
     { apiName: this.apiName });
   
 
+  generateSuggestNewCode = () =>
+    this.restService.request<any, string>({
+      method: 'POST',
+      responseType: 'text',
+      url: '/api/app/product/generate-suggest-new-code',
+    },
+    { apiName: this.apiName });
+  
+
   get = (id: string) =>
     this.restService.request<any, ProductDto>({
       method: 'GET',

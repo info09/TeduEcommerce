@@ -5,7 +5,7 @@ import { ProductCategoriesService, ProductCategoryInListDto } from '@proxy/produ
 import { ProductDto, ProductService, } from '@proxy/products';
 import { productTypeOptions } from '@proxy/tedu-ecommerce/products';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { forkJoin, Subject, takeUntil } from 'rxjs';
+import { forkJoin, Subject, take, takeUntil } from 'rxjs';
 import { UtilityService } from '../shared/services/utility.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NotificationService } from '../shared/services/notification.service';
@@ -103,6 +103,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           });
           //Load edit data to form
           if (this.utilService.isEmpty(this.config.data?.id) == true) {
+            this.getNewSuggestionCode();
             this.toggleBlockUI(false);
           } else {
             this.loadFormDetails(this.config.data?.id);
@@ -112,6 +113,16 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           this.toggleBlockUI(false);
         },
       });
+  }
+
+  getNewSuggestionCode(){
+    this.productService.generateSuggestNewCode().pipe(takeUntil(this.ngUnsubscribe)).subscribe({
+      next: (res:string) => {
+        this.form.patchValue({
+          code: res
+        })
+      }
+    })
   }
 
   loadFormDetails(id: string) {

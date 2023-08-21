@@ -11,6 +11,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.ObjectMapping;
 
 namespace TeduEcommerce.Admin.Products
 {
@@ -20,11 +21,13 @@ namespace TeduEcommerce.Admin.Products
         private readonly ProductManager _productManager;
         private readonly IRepository<ProductCategory, Guid> _productCategoryRepository;
         private readonly IBlobContainer<ProductThumbnailPictureContainer> _fileContainer;
-        public ProductAppService(IRepository<Product, Guid> repository, ProductManager productManager, IRepository<ProductCategory, Guid> productCategoryRepository, IBlobContainer<ProductThumbnailPictureContainer> fileContainer) : base(repository)
+        private readonly ProductCodeGenerator _productCodeGenerator;
+        public ProductAppService(IRepository<Product, Guid> repository, ProductManager productManager, IRepository<ProductCategory, Guid> productCategoryRepository, IBlobContainer<ProductThumbnailPictureContainer> fileContainer, ProductCodeGenerator productCodeGenerator) : base(repository)
         {
             _productManager = productManager;
             _productCategoryRepository = productCategoryRepository;
             _fileContainer = fileContainer;
+            _productCodeGenerator = productCodeGenerator;
         }
 
         public override async Task<ProductDto> CreateAsync(CreateUpdateProductDto input)
@@ -112,7 +115,7 @@ namespace TeduEcommerce.Admin.Products
             query = query.WhereIf(input.CategoryId.HasValue, i => i.CategoryId == input.CategoryId);
 
             var totalCount = await AsyncExecuter.LongCountAsync(query);
-            var data = await AsyncExecuter.ToListAsync(query.Skip(input.SkipCount).Take(input.MaxResultCount));
+            var data = await AsyncExecuter.ToListAsync(query.Skip(input.SkipCount).Take(input.MaxResultCount).OrderBy(i => i.Code));
             var result = ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data);
 
             return new PagedResultDto<ProductInListDto>(totalCount, result);
@@ -136,6 +139,11 @@ namespace TeduEcommerce.Admin.Products
 
             var result = Convert.ToBase64String(thumbnailContent);
             return result;
+        }
+
+        public async Task<string> GenerateSuggestNewCodeAsync()
+        {
+            return await _productCodeGenerator.GenerateAsync();
         }
     }
 }

@@ -13,5 +13,6 @@ namespace TeduEcommerce.Admin.Products
         Task DeleteMutipleAsync(IEnumerable<Guid> ids);
 
         Task<string> GetThumbnailImageAsync(string fileName);
+        Task<string> GenerateSuggestNewCodeAsync();
     }
 }
