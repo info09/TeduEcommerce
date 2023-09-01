@@ -239,11 +239,9 @@ namespace TeduEcommerce.Admin.Products
 
         public async Task<ProductAttributeValueDto> UpdateProductAttributeAsync(Guid id, AddUpdateProductAttributeDto input)
         {
-            var product = await Repository.GetAsync(id);
-            if (product == null) throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductIsNotExists);
+            var product = await Repository.GetAsync(id) ?? throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductIsNotExists);
 
-            var attribute = await _productAttributeRepository.GetAsync(i => i.Id == input.AttributeId);
-            if (attribute == null) throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
+            var attribute = await _productAttributeRepository.GetAsync(i => i.Id == input.AttributeId) ?? throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
 
             switch (attribute.DataType)
             {
@@ -322,44 +320,23 @@ namespace TeduEcommerce.Admin.Products
             switch (attribute.DataType)
             {
                 case AttributeType.Date:
-                    var productAttributeDateTime = await _productAttributeDateTimeRepository.GetAsync(i => i.Id == id);
-                    if (productAttributeDateTime == null)
-                    {
-                        throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
-                    }
+                    var productAttributeDateTime = await _productAttributeDateTimeRepository.GetAsync(i => i.Id == id) ?? throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                     await _productAttributeDateTimeRepository.DeleteAsync(productAttributeDateTime);
                     break;
                 case AttributeType.Int:
-                    var productAttributeInt = await _productAttributeIntRepository.GetAsync(i => i.Id == id);
-                    if (productAttributeInt == null)
-                    {
-                        throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
-                    }
+                    var productAttributeInt = await _productAttributeIntRepository.GetAsync(i => i.Id == id) ?? throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                     await _productAttributeIntRepository.DeleteAsync(productAttributeInt);
                     break;
                 case AttributeType.Decimal:
-                    var productAttributeDecimal = await _productAttributeDecimalRepository.GetAsync(i => i.Id == id);
-                    if (productAttributeDecimal == null)
-                    {
-                        throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
-                    }
+                    var productAttributeDecimal = await _productAttributeDecimalRepository.GetAsync(i => i.Id == id) ?? throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                     await _productAttributeDecimalRepository.DeleteAsync(productAttributeDecimal);
                     break;
                 case AttributeType.Varchar:
-                    var productAttributeVarchar = await _productAttributeVarcharRepository.GetAsync(i => i.Id == id);
-                    if (productAttributeVarchar == null)
-                    {
-                        throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
-                    }
-
+                    var productAttributeVarchar = await _productAttributeVarcharRepository.GetAsync(i => i.Id == id) ?? throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                     await _productAttributeVarcharRepository.DeleteAsync(productAttributeVarchar);
                     break;
                 case AttributeType.Text:
-                    var productAttributeText = await _productAttributeTextRepository.GetAsync(i => i.Id == id);
-                    if (productAttributeText == null)
-                    {
-                        throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
-                    }
+                    var productAttributeText = await _productAttributeTextRepository.GetAsync(i => i.Id == id) ?? throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductAttributeIdIsNotExists);
                     await _productAttributeTextRepository.DeleteAsync(productAttributeText);
                     break;
             }
@@ -437,9 +414,9 @@ namespace TeduEcommerce.Admin.Products
                         from aText in aTextTable.DefaultIfEmpty()
                         where (adate != null || adate.ProductId == input.ProductId)
                         && (adecimal != null || adecimal.ProductId == input.ProductId)
-                         && (aint != null || aint.ProductId == input.ProductId)
-                          && (aVarchar != null || aVarchar.ProductId == input.ProductId)
-                           && (aText != null || aText.ProductId == input.ProductId)
+                        && (aint != null || aint.ProductId == input.ProductId)
+                        && (aVarchar != null || aVarchar.ProductId == input.ProductId)
+                        && (aText != null || aText.ProductId == input.ProductId)
                         select new ProductAttributeValueDto()
                         {
                             Label = a.Label,
