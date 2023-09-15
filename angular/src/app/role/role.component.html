@@ -1,0 +1,100 @@
+<p-panel header="Danh sách sản phẩm">
+  <!--Filter (search panel)-->
+  <div class="grid">
+    <div class="col-6">
+      <button
+        pButton
+        type="button"
+        (click)="showAddModal()"
+        icon="fa fa-plus"
+        iconPos="left"
+        label="Thêm"
+      ></button>
+      <button
+        pButton
+        type="button"
+        (click)="showEditModal()"
+        *ngIf="selectedItems.length == 1"
+        class="ml-1 p-button-help"
+        icon="fa fa-minus"
+        iconPos="left"
+        label="Sửa"
+      ></button>
+      <button
+        pButton
+        type="button"
+        (click)="deleteItems()"
+        *ngIf="selectedItems.length > 0"
+        class="ml-1 p-button-danger"
+        icon="fa fa-minus"
+        iconPos="left"
+        label="Xóa"
+      ></button>
+    </div>
+    <div class="col-6">
+      <div class="formgroup-inline">
+        <div class="field">
+          <input
+            id="txtKeyword"
+            pInputText
+            (keyup.enter)="loadData()"
+            [(ngModel)]="keyword"
+            placeholder="Nhập tên nhóm..."
+            type="text"
+          />
+        </div>
+        <button type="button" pButton (click)="loadData()">Tìm</button>
+      </div>
+    </div>
+  </div>
+
+  <!--Table-->
+  <p-table #pnl [value]="items" [(selection)]="selectedItems" selectionMode="multiple">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 10px">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th>Tên</th>
+        <th>Mô tả</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr [pSelectableRow]="row">
+        <td style="width: 10px">
+          <span class="ui-column-title"></span>
+          <p-tableCheckbox [value]="row"></p-tableCheckbox>
+        </td>
+        <td>{{ row.name }}</td>
+        <td>{{ row.description  }}</td>
+        <td>
+          <button
+          pButton
+          pRipple
+          type="button"
+          label="Phân quyền"
+          icon="fa fa-pencil"
+          class="p-button-text"
+          (click)="manageProductAttribute(row.id)"
+        >
+        </button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div style="text-align: left">Tổng số bản ghi: {{ totalCount | number }}</div>
+    </ng-template>
+  </p-table>
+  <!--Paginator-->
+  <p-paginator
+    [rows]="maxResultCount"
+    [totalRecords]="totalCount"
+    (onPageChange)="pageChange($event)"
+    [rowsPerPageOptions]="[10, 20, 30, 50, 100]"
+  ></p-paginator>
+  <!--Block UI-->
+  <p-blockUI [blocked]="blockedPanel" [target]="pnl">
+    <p-progressSpinner></p-progressSpinner>
+  </p-blockUI>
+</p-panel>

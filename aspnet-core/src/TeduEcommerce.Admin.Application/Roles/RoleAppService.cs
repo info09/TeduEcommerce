@@ -64,7 +64,7 @@ namespace TeduEcommerce.Admin.Roles
 
             var query = await Repository.GetQueryableAsync();
             var isNameExisted = query.Any(i => i.Name.ToLower().Trim() == input.Name.ToLower().Trim());
-            if (isNameExisted) throw new BusinessException(TeduEcommerceDomainErrorCodes.RoleNameAlreadyExists);
+            if (isNameExisted && role.Name != input.Name) throw new BusinessException(TeduEcommerceDomainErrorCodes.RoleNameAlreadyExists);
 
             role.ExtraProperties[RoleConsts.DescriptionFieldName] = input.Description;
             var data = await Repository.UpdateAsync(role);

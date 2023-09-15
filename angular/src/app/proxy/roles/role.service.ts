@@ -1,4 +1,4 @@
-import type { CreateUpdateProductCategoryDto, ProductCategoryDto, ProductCategoryInListDto } from './models';
+import type { CreateUpdateRoleDto, RoleDto, RoleInListDto } from './models';
 import { RestService } from '@abp/ng.core';
 import type { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
 import { Injectable } from '@angular/core';
@@ -7,14 +7,14 @@ import type { BaseListFilterDto } from '../models';
 @Injectable({
   providedIn: 'root',
 })
-export class ProductCategoriesService {
+export class RoleService {
   apiName = 'Default';
   
 
-  create = (input: CreateUpdateProductCategoryDto) =>
-    this.restService.request<any, ProductCategoryDto>({
+  create = (input: CreateUpdateRoleDto) =>
+    this.restService.request<any, RoleDto>({
       method: 'POST',
-      url: '/api/app/product-categories',
+      url: '/api/app/role',
       body: input,
     },
     { apiName: this.apiName });
@@ -23,58 +23,58 @@ export class ProductCategoriesService {
   delete = (id: string) =>
     this.restService.request<any, void>({
       method: 'DELETE',
-      url: `/api/app/product-categories/${id}`,
+      url: `/api/app/role/${id}`,
     },
     { apiName: this.apiName });
   
 
-  deleteMultiple = (ids: string[]) =>
+  deleteMultiByIds = (ids: string[]) =>
     this.restService.request<any, void>({
       method: 'DELETE',
-      url: '/api/app/product-categories/multiple',
+      url: '/api/app/role/multi',
       params: { ids },
     },
     { apiName: this.apiName });
   
 
   get = (id: string) =>
-    this.restService.request<any, ProductCategoryDto>({
+    this.restService.request<any, RoleDto>({
       method: 'GET',
-      url: `/api/app/product-categories/${id}`,
+      url: `/api/app/role/${id}`,
     },
     { apiName: this.apiName });
   
 
   getList = (input: PagedResultRequestDto) =>
-    this.restService.request<any, PagedResultDto<ProductCategoryDto>>({
+    this.restService.request<any, PagedResultDto<RoleDto>>({
       method: 'GET',
-      url: '/api/app/product-categories',
+      url: '/api/app/role',
       params: { maxResultCount: input.maxResultCount, skipCount: input.skipCount },
     },
     { apiName: this.apiName });
   
 
   getListAll = () =>
-    this.restService.request<any, ProductCategoryInListDto[]>({
+    this.restService.request<any, RoleInListDto[]>({
       method: 'GET',
-      url: '/api/app/product-categories/all',
+      url: '/api/app/role/all',
     },
     { apiName: this.apiName });
   
 
   getListFilter = (input: BaseListFilterDto) =>
-    this.restService.request<any, PagedResultDto<ProductCategoryInListDto>>({
+    this.restService.request<any, PagedResultDto<RoleInListDto>>({
       method: 'GET',
-      url: '/api/app/product-categories/filter',
+      url: '/api/app/role/filter',
       params: { keyword: input.keyword, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
     },
     { apiName: this.apiName });
   
 
-  update = (id: string, input: CreateUpdateProductCategoryDto) =>
-    this.restService.request<any, ProductCategoryDto>({
+  update = (id: string, input: CreateUpdateRoleDto) =>
+    this.restService.request<any, RoleDto>({
       method: 'PUT',
-      url: `/api/app/product-categories/${id}`,
+      url: `/api/app/role/${id}`,
       body: input,
     },
     { apiName: this.apiName });

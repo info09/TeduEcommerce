@@ -75,7 +75,7 @@ export class ProductAttributeService {
     this.restService.request<any, PagedResultDto<ProductAttributeInListDto>>({
       method: 'GET',
       url: '/api/app/product-attribute/filter',
-      params: { skipCount: input.skipCount, maxResultCount: input.maxResultCount, keyword: input.keyword },
+      params: { keyword: input.keyword, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
     },
     { apiName: this.apiName });
   
