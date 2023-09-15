@@ -20,10 +20,11 @@ import { TeduSharedModule } from '../shared/modules/tedu-shared.module';
 import { BadgeModule } from 'primeng/badge';
 import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ProductAttributeComponent } from './product-attribute.component';
 
 @NgModule({
-  declarations: [ProductComponent, ProductDetailComponent],
+  declarations: [ProductComponent, ProductDetailComponent, ProductAttributeComponent],
   imports: [SharedModule, ProductRoutingModule, PanelModule, TableModule, PaginatorModule, BlockUIModule, ButtonModule, DropdownModule, InputTextModule, ProgressSpinnerModule, DynamicDialogModule, InputNumberModule, CheckboxModule, InputTextareaModule, EditorModule, TeduSharedModule, BadgeModule, ImageModule, ConfirmDialogModule],
-  entryComponents: [ProductDetailComponent]
+  entryComponents: [ProductDetailComponent, ProductAttributeComponent]
 })
 export class ProductModule { }

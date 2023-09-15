@@ -364,11 +364,11 @@ namespace TeduEcommerce.Admin.Products
                         from atext in aTextTable.DefaultIfEmpty()
                         join avarchar in attrubuteVarcharQuery on a.Id equals avarchar.AttributeId into aVarcharTable
                         from avarchar in aVarcharTable.DefaultIfEmpty()
-                        where (adate != null || adate.ProductId == productId)
-                        && (adecimal != null || adecimal.ProductId == productId)
-                        && (aint != null || aint.ProductId == productId)
-                        && (atext != null || atext.ProductId == productId)
-                        && (avarchar != null || avarchar.ProductId == productId)
+                        where (adate == null || adate.ProductId == productId)
+                        && (adecimal == null || adecimal.ProductId == productId)
+                        && (aint == null || aint.ProductId == productId)
+                        && (atext == null || atext.ProductId == productId)
+                        && (avarchar == null || avarchar.ProductId == productId)
                         select new ProductAttributeValueDto()
                         {
                             Label = a.Label,
@@ -387,6 +387,8 @@ namespace TeduEcommerce.Admin.Products
                             TextId = atext.Id,
                             VarcharId = avarchar.Id,
                         };
+
+            query = query.Where(i => i.DateTimeId != null || i.DecimalId != null || i.IntId != null || i.TextId != null || i.VarcharId != null);
 
             return await AsyncExecuter.ToListAsync(query);
         }

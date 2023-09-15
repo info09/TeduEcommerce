@@ -1,3 +1,4 @@
+import type { AddUpdateProductAttributeDto, ProductAttributeListFilterDto, ProductAttributeValueDto } from './attributes/models';
 import type { CreateUpdateProductDto, ProductDto, ProductInListDto, ProductListFilterDto } from './models';
 import { RestService } from '@abp/ng.core';
 import type { PagedResultDto, PagedResultRequestDto } from '@abp/ng.core';
@@ -8,6 +9,15 @@ import { Injectable } from '@angular/core';
 })
 export class ProductService {
   apiName = 'Default';
+  
+
+  addProductAttribute = (input: AddUpdateProductAttributeDto) =>
+    this.restService.request<any, ProductAttributeValueDto>({
+      method: 'POST',
+      url: '/api/app/product/product-attribute',
+      body: input,
+    },
+    { apiName: this.apiName });
   
 
   create = (input: CreateUpdateProductDto) =>
@@ -79,12 +89,37 @@ export class ProductService {
     { apiName: this.apiName });
   
 
+  getListProductAttributeAll = (productId: string) =>
+    this.restService.request<any, ProductAttributeValueDto[]>({
+      method: 'GET',
+      url: `/api/app/product/product-attribute-all/${productId}`,
+    },
+    { apiName: this.apiName });
+  
+
+  getListProductAttributes = (input: ProductAttributeListFilterDto) =>
+    this.restService.request<any, PagedResultDto<ProductAttributeValueDto>>({
+      method: 'GET',
+      url: '/api/app/product/product-attributes',
+      params: { productId: input.productId, keyword: input.keyword, skipCount: input.skipCount, maxResultCount: input.maxResultCount },
+    },
+    { apiName: this.apiName });
+  
+
   getThumbnailImage = (fileName: string) =>
     this.restService.request<any, string>({
       method: 'GET',
       responseType: 'text',
       url: '/api/app/product/thumbnail-image',
       params: { fileName },
+    },
+    { apiName: this.apiName });
+  
+
+  removeProductAttribute = (attributeId: string, id: string) =>
+    this.restService.request<any, void>({
+      method: 'DELETE',
+      url: `/api/app/product/${id}/product-attribute/${attributeId}`,
     },
     { apiName: this.apiName });
   
@@ -102,6 +137,15 @@ export class ProductService {
     this.restService.request<any, ProductDto>({
       method: 'PUT',
       url: `/api/app/product/${id}`,
+      body: input,
+    },
+    { apiName: this.apiName });
+  
+
+  updateProductAttribute = (id: string, input: AddUpdateProductAttributeDto) =>
+    this.restService.request<any, ProductAttributeValueDto>({
+      method: 'PUT',
+      url: `/api/app/product/${id}/product-attribute`,
       body: input,
     },
     { apiName: this.apiName });

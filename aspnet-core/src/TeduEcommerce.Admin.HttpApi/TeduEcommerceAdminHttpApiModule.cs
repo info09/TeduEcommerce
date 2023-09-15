@@ -20,7 +20,7 @@ namespace TeduEcommerce.Admin;
     typeof(AbpFeatureManagementHttpApiModule),
     typeof(AbpSettingManagementHttpApiModule)
     )]
-public class TeduEcommerceHttpApiModule : AbpModule
+public class TeduEcommerceAdminHttpApiModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
