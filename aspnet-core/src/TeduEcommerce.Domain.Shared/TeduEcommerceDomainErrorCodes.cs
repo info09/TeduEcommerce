@@ -11,4 +11,6 @@ public static class TeduEcommerceDomainErrorCodes
 
     public const string ProductAttributeIdIsNotExists = "TeduEcommerce:ProductAttributeIdIsNotExists";
     public const string ProductAttributeValueIsNotValid = "TeduEcommerce:ProductAttributeValueIsNotValid";
+
+    public const string RoleNameAlreadyExists = "TeduEcommerce:RoleNameAlreadyExists";
 }

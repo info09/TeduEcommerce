@@ -3,10 +3,13 @@ using TeduEcommerce.Admin.Manufacturers;
 using TeduEcommerce.Admin.ProductAttributes;
 using TeduEcommerce.Admin.ProductCategories;
 using TeduEcommerce.Admin.Products;
+using TeduEcommerce.Admin.Roles;
 using TeduEcommerce.Manufacturers;
 using TeduEcommerce.ProductAttributes;
 using TeduEcommerce.ProductCategories;
 using TeduEcommerce.Products;
+using TeduEcommerce.Roles;
+using Volo.Abp.Identity;
 
 namespace TeduEcommerce.Admin;
 
@@ -37,5 +40,16 @@ public class TeduEcommerceAdminApplicationAutoMapperProfile : Profile
         CreateMap<ProductAttribute, ProductAttributeDto>();
         CreateMap<ProductAttribute, ProductAttributeInListDto>();
         CreateMap<CreateUpdateProductAttributeDto, ProductAttribute>();
+
+        //Role
+        CreateMap<IdentityRole, RoleDto>().ForMember(i => i.Description, 
+            map => map.MapFrom(i => i.ExtraProperties.ContainsKey(RoleConsts.DescriptionFieldName) ? 
+                                    i.ExtraProperties[RoleConsts.DescriptionFieldName] : null));
+
+        CreateMap<IdentityRole, RoleInListDto>().ForMember(i => i.Description,
+            map => map.MapFrom(i => i.ExtraProperties.ContainsKey(RoleConsts.DescriptionFieldName) ?
+                                    i.ExtraProperties[RoleConsts.DescriptionFieldName] : null));
+
+        CreateMap<CreateUpdateRoleDto, IdentityRole>();
     }
 }
