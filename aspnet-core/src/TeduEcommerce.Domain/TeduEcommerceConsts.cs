@@ -8,4 +8,7 @@ public static class TeduEcommerceConsts
 
     public const string ProductIdentitySettingId = "Product";
     public const string ProductIdentitySettingPrefix = "P";
+
+    public const string ProductAttributeIdentitySettingId = "ProductAttribute";
+    public const string ProductAttributeIdentitySettingPrefix = "PA";
 }

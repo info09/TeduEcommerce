@@ -11,5 +11,7 @@ namespace TeduEcommerce.Admin.ProductAttributes
         Task<PagedResultDto<ProductAttributeInListDto>> GetListFilterAsync(BaseListFilterDto input);
         Task<List<ProductAttributeInListDto>> GetListAllAsync();
         Task DeleteMulti(IEnumerable<Guid> ids);
+
+        Task<string> GenerateSuggestNewCodeAttributeAsync();
     }
 }

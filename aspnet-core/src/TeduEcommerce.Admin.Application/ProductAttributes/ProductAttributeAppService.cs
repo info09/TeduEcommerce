@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TeduEcommerce.ProductAttributes;
+using TeduEcommerce.Products;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -13,8 +14,11 @@ namespace TeduEcommerce.Admin.ProductAttributes
     [Authorize]
     public class ProductAttributeAppService : CrudAppService<ProductAttribute, ProductAttributeDto, Guid, PagedResultRequestDto, CreateUpdateProductAttributeDto, CreateUpdateProductAttributeDto>, IProductAttributeAppService
     {
-        public ProductAttributeAppService(IRepository<ProductAttribute, Guid> repository) : base(repository)
+        private readonly ProductAttributeCodeGenerator _productAttributeCodeGenerator;
+        public ProductAttributeAppService(IRepository<ProductAttribute, Guid> repository,
+                                            ProductAttributeCodeGenerator productAttributeCodeGenerator) : base(repository)
         {
+            _productAttributeCodeGenerator = productAttributeCodeGenerator;
         }
 
         public async Task DeleteMulti(IEnumerable<Guid> ids)
@@ -41,6 +45,11 @@ namespace TeduEcommerce.Admin.ProductAttributes
             var data = await AsyncExecuter.ToListAsync(query.Skip(input.SkipCount).Take(input.MaxResultCount));
 
             return new PagedResultDto<ProductAttributeInListDto>(totalCount, ObjectMapper.Map<List<ProductAttribute>, List<ProductAttributeInListDto>>(data));
+        }
+
+        public async Task<string> GenerateSuggestNewCodeAttributeAsync()
+        {
+            return await _productAttributeCodeGenerator.GenerateAsync();
         }
     }
 }

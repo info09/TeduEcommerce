@@ -21,10 +21,11 @@ import { BadgeModule } from 'primeng/badge';
 import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ProductAttributeComponent } from './product-attribute.component';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [ProductComponent, ProductDetailComponent, ProductAttributeComponent],
-  imports: [SharedModule, ProductRoutingModule, PanelModule, TableModule, PaginatorModule, BlockUIModule, ButtonModule, DropdownModule, InputTextModule, ProgressSpinnerModule, DynamicDialogModule, InputNumberModule, CheckboxModule, InputTextareaModule, EditorModule, TeduSharedModule, BadgeModule, ImageModule, ConfirmDialogModule],
+  imports: [SharedModule, ProductRoutingModule, PanelModule, TableModule, PaginatorModule, BlockUIModule, ButtonModule, DropdownModule, InputTextModule, ProgressSpinnerModule, DynamicDialogModule, InputNumberModule, CheckboxModule, InputTextareaModule, EditorModule, TeduSharedModule, BadgeModule, ImageModule, ConfirmDialogModule, CalendarModule],
   entryComponents: [ProductDetailComponent, ProductAttributeComponent]
 })
 export class ProductModule { }

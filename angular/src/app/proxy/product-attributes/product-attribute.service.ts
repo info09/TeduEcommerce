@@ -37,6 +37,15 @@ export class ProductAttributeService {
     { apiName: this.apiName });
   
 
+  generateSuggestNewCodeAttribute = () =>
+    this.restService.request<any, string>({
+      method: 'POST',
+      responseType: 'text',
+      url: '/api/app/product-attribute/generate-suggest-new-code-attribute',
+    },
+    { apiName: this.apiName });
+  
+
   get = (id: string) =>
     this.restService.request<any, ProductAttributeDto>({
       method: 'GET',
