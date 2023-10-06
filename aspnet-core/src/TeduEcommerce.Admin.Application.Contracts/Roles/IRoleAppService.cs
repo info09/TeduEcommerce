@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.PermissionManagement;
 
 namespace TeduEcommerce.Admin.Roles
 {
@@ -14,5 +15,9 @@ namespace TeduEcommerce.Admin.Roles
         Task DeleteMulti(IEnumerable<Guid> ids);
 
         Task<PagedResultDto<RoleInListDto>> GetListFilterAsync(BaseListFilterDto input);
+
+        Task<GetPermissionListResultDto> GetPermissionAsync(string providerName, string providerKey);
+
+        Task UpdatePermissionsAsync(string providerName, string providerKey, UpdatePermissionsDto input);
     }
 }

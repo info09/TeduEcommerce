@@ -8,9 +8,21 @@ public class TeduEcommerceAdminPermissionDefinitionProvider : PermissionDefiniti
 {
     public override void Define(IPermissionDefinitionContext context)
     {
-        var myGroup = context.AddGroup(TeduEcommerceAdminPermissions.GroupName);
-        //Define your own permissions here. Example:
-        //myGroup.AddPermission(TeduEcommercePermissions.MyPermission1, L("Permission:MyPermission1"));
+        //CatalogGroup
+        var catalogGroup = context.AddGroup(TeduEcommerceAdminPermissions.CatalogGroupName);
+
+        //AddProduct
+        var productPermission = catalogGroup.AddPermission(TeduEcommerceAdminPermissions.Product.Default, L("Permission:Catalog.Product"));
+        productPermission.AddChild(TeduEcommerceAdminPermissions.Product.Create, L("Permission:Catalog.Product.Create"));
+        productPermission.AddChild(TeduEcommerceAdminPermissions.Product.Update, L("Permission:Catalog.Product.Update"));
+        productPermission.AddChild(TeduEcommerceAdminPermissions.Product.Delete, L("Permission:Catalog.Product.Delete"));
+        productPermission.AddChild(TeduEcommerceAdminPermissions.Product.AttributeManage, L("Permission:Catalog.Product.AttributeManage"));
+
+        //AddAttribute
+        var attributePermission = catalogGroup.AddPermission(TeduEcommerceAdminPermissions.Attribute.Default, L("Permission:Catalog.Attribute"));
+        attributePermission.AddChild(TeduEcommerceAdminPermissions.Attribute.Create, L("Permission:Catalog.Attribute.Create"));
+        attributePermission.AddChild(TeduEcommerceAdminPermissions.Attribute.Update, L("Permission:Catalog.Attribute.Update"));
+        attributePermission.AddChild(TeduEcommerceAdminPermissions.Attribute.Delete, L("Permission:Catalog.Attribute.Delete"));
     }
 
     private static LocalizableString L(string name)
