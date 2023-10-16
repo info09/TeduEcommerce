@@ -4,6 +4,7 @@ using TeduEcommerce.Admin.Catalog.ProductAttributes;
 using TeduEcommerce.Admin.Catalog.ProductCategories;
 using TeduEcommerce.Admin.Catalog.Products;
 using TeduEcommerce.Admin.System.Roles;
+using TeduEcommerce.Admin.System.Users;
 using TeduEcommerce.Manufacturers;
 using TeduEcommerce.ProductAttributes;
 using TeduEcommerce.ProductCategories;
@@ -51,5 +52,9 @@ public class TeduEcommerceAdminApplicationAutoMapperProfile : Profile
                                     i.ExtraProperties[RoleConsts.DescriptionFieldName] : null));
 
         CreateMap<CreateUpdateRoleDto, IdentityRole>();
+
+        //User
+        CreateMap<IdentityUser, UserDto>();
+        CreateMap<IdentityUser, UserInListDto>();
     }
 }
