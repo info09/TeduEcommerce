@@ -2,7 +2,7 @@
 using TeduEcommerce.ProductAttributes;
 using Volo.Abp.Application.Dtos;
 
-namespace TeduEcommerce.Admin.ProductAttributes
+namespace TeduEcommerce.Admin.Catalog.ProductAttributes
 {
     public class ProductAttributeInListDto : EntityDto<Guid>
     {

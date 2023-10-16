@@ -1,6 +1,6 @@
 ﻿using TeduEcommerce.ProductAttributes;
 
-namespace TeduEcommerce.Admin.ProductAttributes
+namespace TeduEcommerce.Admin.Catalog.ProductAttributes
 {
     public class CreateUpdateProductAttributeDto
     {

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using TeduEcommerce.ProductAttributes;
 using Volo.Abp.Application.Dtos;
 
-namespace TeduEcommerce.Admin.Products.Attributes
+namespace TeduEcommerce.Admin.Catalog.Products.Attributes
 {
     public class ProductAttributeValueDto : IEntityDto<Guid>
     {

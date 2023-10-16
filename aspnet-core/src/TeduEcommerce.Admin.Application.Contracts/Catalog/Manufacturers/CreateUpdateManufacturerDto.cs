@@ -1,4 +1,4 @@
-﻿namespace TeduEcommerce.Admin.Manufacturers
+﻿namespace TeduEcommerce.Admin.Catalog.Manufacturers
 {
     public class CreateUpdateManufacturerDto
     {

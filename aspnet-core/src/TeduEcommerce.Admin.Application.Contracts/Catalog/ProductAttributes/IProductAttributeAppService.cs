@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
-namespace TeduEcommerce.Admin.ProductAttributes
+namespace TeduEcommerce.Admin.Catalog.ProductAttributes
 {
     public interface IProductAttributeAppService : ICrudAppService<ProductAttributeDto, Guid, PagedResultRequestDto, CreateUpdateProductAttributeDto, CreateUpdateProductAttributeDto>
     {

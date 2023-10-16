@@ -1,4 +1,4 @@
-﻿namespace TeduEcommerce.Admin.Roles
+﻿namespace TeduEcommerce.Admin.System.Roles
 {
     public class CreateUpdateRoleDto
     {

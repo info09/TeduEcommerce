@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using TeduEcommerce.Admin.Products.Attributes;
+using TeduEcommerce.Admin.Catalog.Products.Attributes;
 using TeduEcommerce.ProductAttributes;
 using TeduEcommerce.ProductCategories;
 using TeduEcommerce.Products;
@@ -14,7 +14,7 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.Domain.Repositories;
 
-namespace TeduEcommerce.Admin.Products
+namespace TeduEcommerce.Admin.Catalog.Products
 {
     [Authorize]
     public class ProductAppService : CrudAppService<Product, ProductDto, Guid, PagedResultRequestDto, CreateUpdateProductDto, CreateUpdateProductDto>, IProductAppService
@@ -445,6 +445,6 @@ namespace TeduEcommerce.Admin.Products
             return new PagedResultDto<ProductAttributeValueDto>(totalCount, data);
         }
 
-        
+
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TeduEcommerce.Admin.Products.Attributes;
+using TeduEcommerce.Admin.Catalog.Products.Attributes;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
-namespace TeduEcommerce.Admin.Products
+namespace TeduEcommerce.Admin.Catalog.Products
 {
     public interface IProductAppService : ICrudAppService<ProductDto, Guid, PagedResultRequestDto, CreateUpdateProductDto, CreateUpdateProductDto>
     {

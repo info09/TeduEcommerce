@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TeduEcommerce.Admin.ProductCategories
+namespace TeduEcommerce.Admin.Catalog.ProductCategories
 {
     public class CreateUpdateProductCategoryDtoValidator : AbstractValidator<CreateUpdateProductCategoryDto>
     {

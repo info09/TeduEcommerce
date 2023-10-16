@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TeduEcommerce.Admin.Products
+namespace TeduEcommerce.Admin.Catalog.Products
 {
     public class ProductListFilterDto : BaseListFilterDto
     {

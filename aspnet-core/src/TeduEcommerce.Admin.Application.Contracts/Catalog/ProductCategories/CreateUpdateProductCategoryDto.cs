@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TeduEcommerce.Admin.ProductCategories
+namespace TeduEcommerce.Admin.Catalog.ProductCategories
 {
     public class CreateUpdateProductCategoryDto
     {

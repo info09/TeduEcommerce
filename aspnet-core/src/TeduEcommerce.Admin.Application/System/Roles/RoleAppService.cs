@@ -15,7 +15,7 @@ using Volo.Abp.Identity;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.SimpleStateChecking;
 
-namespace TeduEcommerce.Admin.Roles
+namespace TeduEcommerce.Admin.System.Roles
 {
     public class RoleAppService : CrudAppService<IdentityRole, RoleDto, Guid, PagedResultRequestDto, CreateUpdateRoleDto, CreateUpdateRoleDto>, IRoleAppService
     {
@@ -145,7 +145,7 @@ namespace TeduEcommerce.Admin.Roles
 
             return result;
 
-            
+
         }
 
         private PermissionGrantInfoDto CreatePermissionGrantInfoDto(PermissionDefinition permission)

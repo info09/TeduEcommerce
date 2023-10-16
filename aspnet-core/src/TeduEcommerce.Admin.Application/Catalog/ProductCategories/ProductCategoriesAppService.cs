@@ -10,7 +10,7 @@ using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Uow;
 
-namespace TeduEcommerce.Admin.ProductCategories
+namespace TeduEcommerce.Admin.Catalog.ProductCategories
 {
     [Authorize]
     public class ProductCategoriesAppService : CrudAppService<ProductCategory, ProductCategoryDto, Guid, PagedResultRequestDto, CreateUpdateProductCategoryDto, CreateUpdateProductCategoryDto>, IProductCategoriesAppService

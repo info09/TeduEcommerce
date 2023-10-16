@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TeduEcommerce.Admin.Roles
+namespace TeduEcommerce.Admin.System.Roles
 {
     public class CreateUpdateRoleDtoValidator : AbstractValidator<CreateUpdateRoleDto>
     {

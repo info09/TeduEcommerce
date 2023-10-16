@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TeduEcommerce.Admin.ProductAttributes
+namespace TeduEcommerce.Admin.Catalog.ProductAttributes
 {
     public class CreateUpdateProductAttributeDtoValidator : AbstractValidator<CreateUpdateProductAttributeDto>
     {

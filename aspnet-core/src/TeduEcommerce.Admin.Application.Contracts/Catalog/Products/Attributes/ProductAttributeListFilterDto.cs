@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace TeduEcommerce.Admin.Products.Attributes
+namespace TeduEcommerce.Admin.Catalog.Products.Attributes
 {
     public class ProductAttributeListFilterDto : BaseListFilterDto
     {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
-namespace TeduEcommerce.Admin.Manufacturers
+namespace TeduEcommerce.Admin.Catalog.Manufacturers
 {
     public interface IManufacturersAppService : ICrudAppService<ManufacturerDto, Guid, PagedResultRequestDto, CreateUpdateManufacturerDto, CreateUpdateManufacturerDto>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Volo.Abp.Application.Dtos;
 
-namespace TeduEcommerce.Admin.ProductCategories
+namespace TeduEcommerce.Admin.Catalog.ProductCategories
 {
     public class ProductCategoryDto : IEntityDto<Guid>
     {
