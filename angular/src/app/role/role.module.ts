@@ -20,8 +20,9 @@ import { TeduSharedModule } from '../shared/modules/tedu-shared.module';
 import { BadgeModule } from 'primeng/badge';
 import { ImageModule } from 'primeng/image';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { PermissionGrantComponent } from './permission-grant.component';
 @NgModule({
-  declarations: [RoleComponent, RoleDetailComponent],
+  declarations: [RoleComponent, RoleDetailComponent, PermissionGrantComponent],
   imports: [
     SharedModule,
     RoleRoutingModule,
@@ -44,7 +45,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ConfirmDialogModule
   ],
   entryComponents: [
-    RoleDetailComponent
+    RoleDetailComponent,
+    PermissionGrantComponent
   ]
 })
 export class RoleModule { }
