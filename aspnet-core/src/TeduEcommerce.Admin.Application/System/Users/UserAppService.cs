@@ -113,5 +113,28 @@ namespace TeduEcommerce.Admin.System.Users
 
             return new PagedResultDto<UserInListDto>(totalCount, users);
         }
+
+        public async Task AssignRolesAsync(Guid userId, string[] roleNames){
+            var user = await _identityUserManager.FindByIdAsync(id);
+            if(user == null){
+                throw new EntityNotFoundException(typeof(IdentityUser), userId);
+            }
+
+            var currentRoles = await _identityUserManager.GetRolesAsync(user);
+            var removedResult = await _identityUserManager.RemoveFromRolesAsync(user, currentRoles);
+            var addedResult = await _identityUserManager.AddToRolesAsync(user, roleNames);
+            if(!addedResult.Succeeded && !removedResult.Succeeded){
+                List<Microsoft.AspNetCore.Identity.IdentityError> addedErrorList = addedResult.Errors.ToList();
+                List<Microsoft.AspNetCore.Identity.IdentityError> removedErrorList = removedResult.Errors.ToList();
+                var errorList = new List<Microsoft.AspNetCore.Identity.IdentityError>();
+                errorList.AddRange(addedErrorList);
+                errorList.AddRange(removedErrorList);
+                string errors = "";
+                foreach(var err in errorList){
+                    errors += err.Description.ToString();
+                }
+                throw new UserFriendlyException(errors);
+            }
+        }
     }
 }
