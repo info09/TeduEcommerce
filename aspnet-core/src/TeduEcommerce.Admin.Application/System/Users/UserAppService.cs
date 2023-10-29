@@ -113,5 +113,20 @@ namespace TeduEcommerce.Admin.System.Users
 
             return new PagedResultDto<UserInListDto>(totalCount, users);
         }
+
+        public override async Task<UserDto> GetAsync(Guid id)
+        {
+            var user = await _identityUserManager.GetByIdAsync(id);
+            if (user == null)
+            {
+                throw new EntityNotFoundException(typeof(IdentityUser), id);
+            }
+
+            var userDto = ObjectMapper.Map<IdentityUser, UserDto>(user);
+            var roles = await _identityUserManager.GetRolesAsync(user); 
+            userDto.Roles = roles;
+
+            return userDto;
+        }
     }
 }
