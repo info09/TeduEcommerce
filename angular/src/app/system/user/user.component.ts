@@ -76,25 +76,6 @@ export class UserComponent implements OnInit, OnDestroy {
     this.loadData();
   }
 
-  // manageProductAttribute(id:string){
-  //   const ref = this.dialogService.open(ProductAttributeComponent, {
-  //     data: {
-  //       id: id
-  //     },
-  //     header: 'Quản lý thuộc tính sản phẩm',
-  //     width: '70%',
-  //     height: '50%'
-  //   });
-
-  //   ref.onClose.subscribe((data: ProductDto) => {
-  //     if (data) {
-  //       this.loadData();
-  //       this.selectedItems = [];
-  //       this.notificationService.showSuccess('Cập nhật thuộc tính sản phẩm thành công');
-  //     }
-  //   });
-  // }
-
   showAddModal() {
     const ref = this.dialogService.open(UserDetailComponent, {
       header: 'Thêm mới quyền',
@@ -132,25 +113,6 @@ export class UserComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  // showPermissionModal(id: string, name: string){
-  //   const ref = this.dialogService.open(PermissionGrantComponent, {
-  //     data: {
-  //       id: id,
-  //       name: name
-  //     },
-  //     header: name,
-  //     width: '70%'
-  //   });
-
-  //   ref.onClose.subscribe((data: RoleDto) => {
-  //     if(data){
-  //       this.notificationService.showSuccess(MessageConstants.UPDATED_OK_MSG);
-  //       this.selectedItems = [];
-  //       this.loadData(data.id);
-  //     }
-  //   })
-  // }
 
   deleteItems(){
     if(this.selectedItems.length == 0){
