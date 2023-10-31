@@ -72,7 +72,7 @@
         <td>{{ row.userName  }}</td>
         <td>{{ row.email  }}</td>
         <td>{{ row.phoneNumber  }}</td>
-        <td>{{ row.creationTime | date: 'dd-MM-yyyy hh:mm' }}</td>
+        <td>{{ row.creationTime }}</td>
         <td style="width: 150px">
           <p-badge *ngIf="row.isActive == 1" value="Kích hoạt" severity="success"></p-badge>
           <p-badge *ngIf="row.isActive == 0" value="Khoá" severity="danger"></p-badge>

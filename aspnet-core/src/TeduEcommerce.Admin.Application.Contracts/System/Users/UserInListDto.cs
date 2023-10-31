@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
 namespace TeduEcommerce.Admin.System.Users
 {
-    public class UserInListDto : AuditedEntityDto
+    public class UserInListDto : AuditedEntityDto<Guid>
     {
         public string Name { get; set; }
         public string Surname { get; set; }

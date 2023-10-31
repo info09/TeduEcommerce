@@ -171,7 +171,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   deleteItemsConfirm(ids: string[]){
     this.toggleBlockUI(true);
-    this.roleService.deleteMultiByIds(ids).pipe(takeUntil(this.ngUnsubscribe)).subscribe({
+    this.userService.deleteMultiple(ids).pipe(takeUntil(this.ngUnsubscribe)).subscribe({
       next: ()=> {
         this.notificationService.showSuccess(MessageConstants.DELETED_OK_MSG);
         this.loadData();

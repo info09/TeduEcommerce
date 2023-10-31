@@ -35,6 +35,7 @@ namespace TeduEcommerce.Admin.System.Users
             var user = new IdentityUser(userId, input.UserName, input.Email);
             user.Name = input.Name;
             user.Surname = input.Surname;
+            user.SetPhoneNumber(input.PhoneNumber, true);
             var result = await _identityUserManager.CreateAsync(user, input.Password);
             if (result.Succeeded)
                 return ObjectMapper.Map<IdentityUser, UserDto>(user);

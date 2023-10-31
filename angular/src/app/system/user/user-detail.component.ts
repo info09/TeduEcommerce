@@ -1,8 +1,9 @@
 import { Component, OnInit, EventEmitter, OnDestroy } from '@angular/core';
 import { Validators, FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { RoleDto, RoleService } from '@proxy/system/roles';
+import { UserDto, UserService } from '@proxy/system/users';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, forkJoin, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { UtilityService } from 'src/app/shared/services/utility.service';
 
@@ -19,7 +20,11 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   public btnDisabled = false;
   public saveBtnName: string;
   public closeBtnName: string;
-  selectedEntity = {} as RoleDto;
+  public roles: any[] = [];
+  public countries: any[] = [];
+  public provinces: any[] = [];
+  selectedEntity = {} as UserDto;
+  public avatarImage;
 
   formSavedEventEmitter: EventEmitter<any> = new EventEmitter();
 
@@ -27,10 +32,11 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     private roleService: RoleService,
+    private userService: UserService,
     public authService: AuthService,
     private utilService: UtilityService,
     private fb: FormBuilder
-  ) {}
+  ) { }
 
   ngOnDestroy(): void {
     if (this.ref) {
@@ -40,42 +46,61 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  public generateSlug() {
-    var slug = this.utilService.MakeSeoTitle(this.form.get('name').value);
-    this.form.controls['slug'].setValue(slug);
-  }
+
   ngOnInit() {
     this.buildForm();
-    if (this.utilService.isEmpty(this.config.data?.id) == false) {
-      this.loadDetail(this.config.data.id);
-      this.saveBtnName = 'Cập nhật';
-      this.closeBtnName = 'Hủy';
-    } else {
-      this.saveBtnName = 'Thêm';
-      this.closeBtnName = 'Đóng';
-    }
+    var roles = this.roleService.getListAll();
+    this.toggleBlockUI(true);
+    forkJoin({
+      roles
+    }).pipe(takeUntil(this.ngUnsubscribe)).subscribe({
+      next: (response: any) => {
+        var roles = response.roles as RoleDto[];
+        roles.forEach(element => {
+          this.roles.push({
+            value: element.id,
+            label: element.name
+          });
+        });
+
+        if (this.utilService.isEmpty(this.config.data?.id) == false) {
+          this.loadFormDetails(this.config.data.id);
+        } else {
+          this.setMode('create');
+          this.toggleBlockUI(false);
+        }
+      },
+      error: () => {
+        this.toggleBlockUI(false);
+      }
+    });
   }
 
   // Validate
-  noSpecial: RegExp = /^[^<>*!_~]+$/;
   validationMessages = {
-    name: [
-      { type: 'required', message: 'Bạn phải nhập tên nhóm' },
-      { type: 'minlength', message: 'Bạn phải nhập ít nhất 3 kí tự' },
-      { type: 'maxlength', message: 'Bạn không được nhập quá 255 kí tự' },
+    name: [{ type: 'required', message: 'Bạn phải nhập tên' }],
+    surname: [{ type: 'required', message: 'Bạn phải URL duy nhất' }],
+    email: [{ type: 'required', message: 'Bạn phải nhập email' }],
+    userName: [{ type: 'required', message: 'Bạn phải nhập tài khoản' }],
+    password: [
+      { type: 'required', message: 'Bạn phải nhập mật khẩu' },
+      {
+        type: 'pattern',
+        message: 'Mật khẩu ít nhất 8 ký tự, ít nhất 1 số, 1 ký tự đặc biệt, và một chữ hoa',
+      },
     ],
-    description: [{ type: 'required', message: 'Bạn phải mô tả' }],
+    phoneNumber: [{ type: 'required', message: 'Bạn phải nhập số điện thoại' }],
   };
 
-  loadDetail(id: any) {
-    this.toggleBlockUI(true);
-    this.roleService
+  loadFormDetails(id: string) {
+    this.userService
       .get(id)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe({
-        next: (response: RoleDto) => {
+        next: (response: UserDto) => {
           this.selectedEntity = response;
           this.buildForm();
+          this.setMode('update');
           this.toggleBlockUI(false);
         },
         error: () => {
@@ -90,8 +115,10 @@ export class UserDetailComponent implements OnInit, OnDestroy {
   }
 
   private saveData() {
+    this.toggleBlockUI(true);
+    console.log(this.form.value);
     if (this.utilService.isEmpty(this.config.data?.id)) {
-      this.roleService
+      this.userService
         .create(this.form.value)
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe(() => {
@@ -99,7 +126,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           this.toggleBlockUI(false);
         });
     } else {
-      this.roleService
+      this.userService
         .update(this.config.data.id, this.form.value)
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe(() => {
@@ -109,17 +136,40 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  setMode(mode: string) {
+    if (mode == 'update') {
+      this.form.controls['userName'].clearValidators();
+      this.form.controls['userName'].disable();
+      this.form.controls['email'].clearValidators();
+      this.form.controls['email'].disable();
+      this.form.controls['password'].clearValidators();
+      this.form.controls['password'].disable();
+    } else if (mode == 'create') {
+      this.form.controls['userName'].addValidators(Validators.required);
+      this.form.controls['userName'].enable();
+      this.form.controls['email'].addValidators(Validators.required);
+      this.form.controls['email'].enable();
+      this.form.controls['password'].addValidators(Validators.required);
+      this.form.controls['password'].enable();
+    }
+  }
+
   buildForm() {
     this.form = this.fb.group({
-      name: new FormControl(
-        this.selectedEntity.name || null,
+      name: new FormControl(this.selectedEntity.name || null, Validators.required),
+      surname: new FormControl(this.selectedEntity.surname || null, Validators.required),
+      userName: new FormControl(this.selectedEntity.userName || null, Validators.required),
+      email: new FormControl(this.selectedEntity.email || null, Validators.required),
+      phoneNumber: new FormControl(this.selectedEntity.phoneNumber || null, Validators.required),
+      password: new FormControl(
+        null,
         Validators.compose([
           Validators.required,
-          Validators.maxLength(255),
-          Validators.minLength(3),
+          Validators.pattern(
+            '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-zd$@$!%*?&].{8,}$'
+          ),
         ])
-      ),
-      description: new FormControl(this.selectedEntity.description || null),
+      )
     });
   }
 

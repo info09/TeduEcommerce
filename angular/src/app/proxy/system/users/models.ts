@@ -26,7 +26,7 @@ export interface UserDto extends AuditedEntityDto<string> {
   isActive: boolean;
 }
 
-export interface UserInListDto extends AuditedEntityDto {
+export interface UserInListDto extends AuditedEntityDto<string> {
   name?: string;
   surname?: string;
   email?: string;
