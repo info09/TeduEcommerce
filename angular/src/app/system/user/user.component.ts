@@ -9,6 +9,7 @@ import { MessageConstants } from '../../shared/constants/messages.constant';
 import { RoleDto, RoleInListDto, RoleService } from '@proxy/system/roles';
 import { UserDetailComponent } from './user-detail.component';
 import { UserDto, UserInListDto, UserService } from '@proxy/system/users';
+import { RoleAssignComponent } from './role-assign.component';
 
 @Component({
   selector: 'app-user',
@@ -112,6 +113,23 @@ export class UserComponent implements OnInit, OnDestroy {
         this.notificationService.showSuccess('Cập nhật quyền thành công');
       }
     });
+  }
+
+  assignRole(id: string){
+    const ref = this.dialogService.open(RoleAssignComponent, {
+      data: {
+        id: id
+      },
+      header: 'Gán quyền',
+      width: '70%'
+    });
+
+    ref.onClose.subscribe((result: boolean) => {
+      if(result){
+        this.notificationService.showSuccess(MessageConstants.ROLE_ASSIGN_SUCCESS_MSG);
+        this.loadData();
+      }
+    })
   }
 
   deleteItems(){
