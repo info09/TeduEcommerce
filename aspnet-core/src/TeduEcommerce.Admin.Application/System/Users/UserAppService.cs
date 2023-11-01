@@ -35,6 +35,7 @@ namespace TeduEcommerce.Admin.System.Users
             var user = new IdentityUser(userId, input.UserName, input.Email);
             user.Name = input.Name;
             user.Surname = input.Surname;
+            user.SetPhoneNumber(input.PhoneNumber, true);
             var result = await _identityUserManager.CreateAsync(user, input.Password);
             if (result.Succeeded)
                 return ObjectMapper.Map<IdentityUser, UserDto>(user);
@@ -112,6 +113,21 @@ namespace TeduEcommerce.Admin.System.Users
             var users = ObjectMapper.Map<List<IdentityUser>, List<UserInListDto>>(data);
 
             return new PagedResultDto<UserInListDto>(totalCount, users);
+        }
+
+        public override async Task<UserDto> GetAsync(Guid id)
+        {
+            var user = await _identityUserManager.GetByIdAsync(id);
+            if (user == null)
+            {
+                throw new EntityNotFoundException(typeof(IdentityUser), id);
+            }
+
+            var userDto = ObjectMapper.Map<IdentityUser, UserDto>(user);
+            var roles = await _identityUserManager.GetRolesAsync(user); 
+            userDto.Roles = roles;
+
+            return userDto;
         }
 
         public async Task AssignRolesAsync(Guid userId, string[] roleNames)

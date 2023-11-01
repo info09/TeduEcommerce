@@ -10,43 +10,20 @@ const routes: Routes = [
     component: AppLayoutComponent
   },
   {
-    path: 'product',
-    loadChildren: () => import('./product/product.module').then(m => m.ProductModule),
+    path: 'system',
+    loadChildren: () => import('./system/system.module').then(m => m.SystemModule),
     component: AppLayoutComponent
   },
   {
-    path: 'attribute',
-    loadChildren: () => import('./attribute/attribute.module').then(m => m.AttributeModule),
-    component: AppLayoutComponent
-  },
-  {
-    path: 'role',
-    loadChildren: () => import('./role/role.module').then(m => m.RoleModule),
+    path: 'catalog',
+    loadChildren: () => import('./catalog/catalog.module').then(m => m.CatalogModule),
     component: AppLayoutComponent
   },
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
-  },
-  // {
-  //   path: 'account',
-  //   loadChildren: () => import('@abp/ng.account').then(m => m.AccountModule.forLazy()),
-  // },
-  // {
-  //   path: 'identity',
-  //   loadChildren: () => import('@abp/ng.identity').then(m => m.IdentityModule.forLazy()),
-  // },
-  // {
-  //   path: 'tenant-management',
-  //   loadChildren: () =>
-  //     import('@abp/ng.tenant-management').then(m => m.TenantManagementModule.forLazy()),
-  // },
-  // {
-  //   path: 'setting-management',
-  //   loadChildren: () =>
-  //     import('@abp/ng.setting-management').then(m => m.SettingManagementModule.forLazy()),
-  // },
-];
+  }
+]
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
