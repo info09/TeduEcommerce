@@ -2,49 +2,23 @@
   <!--Filter (search panel)-->
   <div class="grid">
     <div class="col-6">
-      <button
-          pButton
-          type="button"
-          label="Thêm"
-          icon="fa fa-plus"
-          (click)="showAddModal()"
-          class="ml-1 p-button-info"
-        ></button>
-        <button
-          pButton
-          type="button"
-          label="Xóa"
-          icon="fa fa-trash"
-          class="ml-1 p-button-danger"
-          *ngIf="selectedItems.length > 0"
-          (click)="deleteItems()"
-        ></button>
-        <button
-          pButton
-          type="button"
-          label="Sửa"
-          icon="fa fa-edit"
-          class="ml-1 p-button-help"
-          *ngIf="selectedItems.length == 1"
-          (click)="showEditModal()"
-        ></button>
-      </div>
-      <div class="col-8">
-        <div class="formgroup-inline">
-          <div class="field">
-            <input
-              id="txtKeyword"
-              pInputText
-              (keyup.enter)="loadData()"
-              [(ngModel)]="keyword"
-              placeholder="Nhập từ khóa..."
-              type="text"
-            />
-          </div>
-          <button type="button" pButton (click)="loadData()">Tìm</button>
+      <button pButton type="button" label="Thêm" icon="fa fa-plus" (click)="showAddModal()"
+        class="ml-1 p-button-info"></button>
+      <button pButton type="button" label="Xóa" icon="fa fa-trash" class="ml-1 p-button-danger"
+        *ngIf="selectedItems.length > 0" (click)="deleteItems()"></button>
+      <button pButton type="button" label="Sửa" icon="fa fa-edit" class="ml-1 p-button-help"
+        *ngIf="selectedItems.length === 1" (click)="showEditModal()"></button>
+    </div>
+    <div class="col-8">
+      <div class="formgroup-inline">
+        <div class="field">
+          <input id="txtKeyword" pInputText (keyup.enter)="loadData()" [(ngModel)]="keyword"
+            placeholder="Nhập từ khóa..." type="text" />
         </div>
+        <button type="button" pButton (click)="loadData()">Tìm</button>
       </div>
     </div>
+  </div>
 
   <!--Table-->
   <p-table #pnl [value]="items" [(selection)]="selectedItems" selectionMode="multiple">
@@ -69,13 +43,13 @@
           <p-tableCheckbox [value]="row"></p-tableCheckbox>
         </td>
         <td>{{ row.name }}</td>
-        <td>{{ row.userName  }}</td>
-        <td>{{ row.email  }}</td>
-        <td>{{ row.phoneNumber  }}</td>
+        <td>{{ row.userName }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.phoneNumber }}</td>
         <td>{{ row.creationTime }}</td>
         <td style="width: 150px">
-          <p-badge *ngIf="row.isActive == 1" value="Kích hoạt" severity="success"></p-badge>
-          <p-badge *ngIf="row.isActive == 0" value="Khoá" severity="danger"></p-badge>
+          <p-badge *ngIf="row.isActive === 1" value="Kích hoạt" severity="success"></p-badge>
+          <p-badge *ngIf="row.isActive === 0" value="Khoá" severity="danger"></p-badge>
         </td>
         <td></td>
       </tr>
@@ -85,12 +59,8 @@
     </ng-template>
   </p-table>
   <!--Paginator-->
-  <p-paginator
-    [rows]="maxResultCount"
-    [totalRecords]="totalCount"
-    (onPageChange)="pageChange($event)"
-    [rowsPerPageOptions]="[10, 20, 30, 50, 100]"
-  ></p-paginator>
+  <p-paginator [rows]="maxResultCount" [totalRecords]="totalCount" (onPageChange)="pageChange($event)"
+    [rowsPerPageOptions]="[10, 20, 30, 50, 100]"></p-paginator>
   <!--Block UI-->
   <p-blockUI [blocked]="blockedPanel" [target]="pnl">
     <p-progressSpinner></p-progressSpinner>
