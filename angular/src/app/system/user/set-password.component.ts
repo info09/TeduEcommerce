@@ -1,18 +1,19 @@
-import { takeUntil } from 'rxjs';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Component, OnInit, EventEmitter, OnDestroy } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
-  FormControl,
   Validators,
+  FormControl,
+  FormGroup,
+  FormBuilder,
+  ValidatorFn,
   AbstractControl,
   ValidationErrors,
-  ValidatorFn,
 } from '@angular/forms';
-import { OnInit, OnDestroy, EventEmitter } from '@angular/core';
-import { UserService } from '@proxy/system/users';
-import { AuthService } from 'src/app/shared/services/auth.service';
 import { RoleDto } from '@proxy/system/roles';
+import { UserService } from '@proxy/system/users';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Subject, takeUntil } from 'rxjs';
+import { AuthService } from 'src/app/shared/services/auth.service';
+
 @Component({
   templateUrl: 'set-password.component.html',
 })
@@ -31,16 +32,14 @@ export class SetPasswordComponent implements OnInit, OnDestroy {
   formSavedEventEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor(
-    private userService: UserService,
-    private fb: FormBuilder,
-    public authService: AuthService,
+    public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
-    public ref: DynamicDialogRef
-  ) {}
+    private userService: UserService,
+    public authService: AuthService,
+    private fb: FormBuilder
+  ) { }
 
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
     if (this.ref) {
       this.ref.close();
     }
@@ -48,9 +47,7 @@ export class SetPasswordComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
+  ngOnInit() {
     this.buildForm();
     this.saveBtnName = 'Cập nhật';
     this.closeBtnName = 'Hủy';
@@ -71,7 +68,6 @@ export class SetPasswordComponent implements OnInit, OnDestroy {
 
   saveChange() {
     this.toggleBlockUI(true);
-
     this.saveData();
   }
 
@@ -79,25 +75,28 @@ export class SetPasswordComponent implements OnInit, OnDestroy {
     this.userService
       .setPassword(this.config.data.id, this.form.value)
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subcribe(() => {
+      .subscribe(() => {
         this.toggleBlockUI(false);
-        this.ref.close();
+        this.ref.close(this.form.value);
       });
   }
 
   buildForm() {
-    this.form = this.fb.group({
-      newPassword: new FormControl(
-        null,
-        Validators.compose[
-          (Validators.required,
-          Validators.pattern(
-            '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-zd$@$!%*?&].{8,}$'
-          ))
-        ]
-      ),
-      confirmPassword: new FormControl(null),
-    });
+    this.form = this.fb.group(
+      {
+        newPassword: new FormControl(
+          null,
+          Validators.compose([
+            Validators.required,
+            Validators.pattern(
+              '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-zd$@$!%*?&].{8,}$'
+            ),
+          ])
+        ),
+        confirmNewPassword: new FormControl(null),
+      },
+      passwordMatchingValidatior
+    );
   }
 
   private toggleBlockUI(enabled: boolean) {
@@ -112,10 +111,7 @@ export class SetPasswordComponent implements OnInit, OnDestroy {
     }
   }
 }
-
-export const passwordMatchingValidatior: ValidatorFn = (
-  control: AbstractControl
-): ValidationErrors | null => {
+export const passwordMatchingValidatior: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const password = control.get('newPassword');
   const confirmPassword = control.get('confirmNewPassword');
 

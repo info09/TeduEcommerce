@@ -10,6 +10,7 @@ import { RoleDto, RoleInListDto, RoleService } from '@proxy/system/roles';
 import { UserDetailComponent } from './user-detail.component';
 import { UserDto, UserInListDto, UserService } from '@proxy/system/users';
 import { RoleAssignComponent } from './role-assign.component';
+import { SetPasswordComponent } from './set-password.component';
 
 @Component({
   selector: 'app-user',
@@ -138,7 +139,7 @@ export class UserComponent implements OnInit, OnDestroy {
         id: id
       },
       header: 'Đặt lại mật khẩu',
-      with: '70%'
+      width: '70%'
     });
 
     ref.onClose.subscribe((result: boolean) => {

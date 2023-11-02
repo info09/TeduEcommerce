@@ -9,6 +9,11 @@ export interface CreateUserDto {
   phoneNumber?: string;
 }
 
+export interface SetPasswordDto {
+  newPassword?: string;
+  comfirmNewPassword?: string;
+}
+
 export interface UpdateUserDto {
   name?: string;
   surname?: string;
