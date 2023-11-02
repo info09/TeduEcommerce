@@ -56,6 +56,16 @@
               pButton
               pRipple
               type="button"
+              icon="pi pi-key"
+              pTooltip="Đặt mật khẩu"
+              tooltipPosition="top"
+              (click)="setPassword(row.id)"
+              class="p-button-rounded p-button-text"
+            ></button>
+          <button
+              pButton
+              pRipple
+              type="button"
               icon="pi pi-users"
               pTooltip="Gán vai trò"
               tooltipPosition="top"

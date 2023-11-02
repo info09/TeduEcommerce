@@ -132,6 +132,23 @@ export class UserComponent implements OnInit, OnDestroy {
     })
   }
 
+  setPassword(id: string){
+    const ref = this.dialogService.open(SetPasswordComponent, {
+      data: {
+        id: id
+      },
+      header: 'Đặt lại mật khẩu',
+      with: '70%'
+    });
+
+    ref.onClose.subscribe((result: boolean) => {
+      if(result){
+        this.notificationService.showSuccess(MessageConstants.CHANGE_PASSWORD_SUCCCESS_MSG);
+        this.loadData();
+      }
+    })
+  }
+
   deleteItems(){
     if(this.selectedItems.length == 0){
       this.notificationService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
