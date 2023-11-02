@@ -156,5 +156,25 @@ namespace TeduEcommerce.Admin.System.Users
                 throw new UserFriendlyException(errors);
             }
         }
+
+        public async Task SetPasswordAsync(Guid userId, SetPasswordDto input)
+        {
+            var user = await _identityUserManager.FindByIdAsync(userId.ToString()) ?? throw new EntityNotFoundException(typeof(IdentityUser), userId);
+            var token = await _identityUserManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _identityUserManager.ResetPasswordAsync(user, token, input.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                List<IdentityError> errorList = result.Errors.ToList();
+                string errors = "";
+
+                foreach (var err in errorList)
+                {
+                    errors += err.Description.ToString();
+                }
+
+                throw new UserFriendlyException(errors);
+            }
+        }
     }
 }
