@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TeduEcommerce.Admin.Catalog.Products.Attributes;
+using TeduEcommerce.Admin.Permissions;
 using TeduEcommerce.ProductAttributes;
 using TeduEcommerce.ProductCategories;
 using TeduEcommerce.Products;
@@ -16,7 +17,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace TeduEcommerce.Admin.Catalog.Products
 {
-    [Authorize]
+    [Authorize(TeduEcommerceAdminPermissions.Product.Default, Policy = "AdminOnly")]
     public class ProductAppService : CrudAppService<Product, ProductDto, Guid, PagedResultRequestDto, CreateUpdateProductDto, CreateUpdateProductDto>, IProductAppService
     {
         private readonly ProductManager _productManager;
@@ -53,8 +54,15 @@ namespace TeduEcommerce.Admin.Catalog.Products
             _productAttributeDecimalRepository = productAttributeDecimalRepository;
             _productAttributeVarcharRepository = productAttributeVarcharRepository;
             _productAttributeTextRepository = productAttributeTextRepository;
+
+            GetPolicyName = TeduEcommerceAdminPermissions.Product.Default;
+            GetListPolicyName = TeduEcommerceAdminPermissions.Product.Default;
+            CreatePolicyName = TeduEcommerceAdminPermissions.Product.Create;
+            UpdatePolicyName = TeduEcommerceAdminPermissions.Product.Update;
+            DeletePolicyName = TeduEcommerceAdminPermissions.Product.Delete;
         }
 
+        [Authorize(TeduEcommerceAdminPermissions.Product.Create)]
         public override async Task<ProductDto> CreateAsync(CreateUpdateProductDto input)
         {
             var product = await _productManager.CreateAsync(input.ManufacturerId,
@@ -82,6 +90,7 @@ namespace TeduEcommerce.Admin.Catalog.Products
             return ObjectMapper.Map<Product, ProductDto>(result);
         }
 
+        [Authorize(TeduEcommerceAdminPermissions.Product.Update)]
         public override async Task<ProductDto> UpdateAsync(Guid id, CreateUpdateProductDto input)
         {
             var product = await Repository.GetAsync(id) ?? throw new BusinessException(TeduEcommerceDomainErrorCodes.ProductIsNotExists);
@@ -116,12 +125,14 @@ namespace TeduEcommerce.Admin.Catalog.Products
             return ObjectMapper.Map<Product, ProductDto>(product);
         }
 
+        [Authorize(TeduEcommerceAdminPermissions.Product.Delete)]
         public async Task DeleteMutipleAsync(IEnumerable<Guid> ids)
         {
             await Repository.DeleteManyAsync(ids);
             await UnitOfWorkManager.Current.SaveChangesAsync();
         }
 
+        [Authorize(TeduEcommerceAdminPermissions.Product.Default)]
         public async Task<List<ProductInListDto>> GetListAllAsync()
         {
             var query = await Repository.GetQueryableAsync();
@@ -131,6 +142,7 @@ namespace TeduEcommerce.Admin.Catalog.Products
             return ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data);
         }
 
+        [Authorize(TeduEcommerceAdminPermissions.Product.Default)]
         public async Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();

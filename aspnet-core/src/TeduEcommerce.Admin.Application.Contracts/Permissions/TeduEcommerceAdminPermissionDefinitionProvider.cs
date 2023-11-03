@@ -11,6 +11,18 @@ public class TeduEcommerceAdminPermissionDefinitionProvider : PermissionDefiniti
         //CatalogGroup
         var catalogGroup = context.AddGroup(TeduEcommerceAdminPermissions.CatalogGroupName);
 
+        //AddManufacturer
+        var manufacturerPermission = catalogGroup.AddPermission(TeduEcommerceAdminPermissions.Manufacturer.Default, L("Permission:Catalog.Manufacturer"));
+        manufacturerPermission.AddChild(TeduEcommerceAdminPermissions.Manufacturer.Create, L("Permission:Catalog.Manufacturer.Create"));
+        manufacturerPermission.AddChild(TeduEcommerceAdminPermissions.Manufacturer.Update, L("Permission:Catalog.Manufacturer.Update"));
+        manufacturerPermission.AddChild(TeduEcommerceAdminPermissions.Manufacturer.Delete, L("Permission:Catalog.Manufacturer.Delete"));
+
+        //Product Category
+        var productCategoryPermission = catalogGroup.AddPermission(TeduEcommerceAdminPermissions.ProductCategory.Default, L("Permission:Catalog.ProductCategory"));
+        productCategoryPermission.AddChild(TeduEcommerceAdminPermissions.ProductCategory.Create, L("Permission:Catalog.ProductCategory.Create"));
+        productCategoryPermission.AddChild(TeduEcommerceAdminPermissions.ProductCategory.Update, L("Permission:Catalog.ProductCategory.Update"));
+        productCategoryPermission.AddChild(TeduEcommerceAdminPermissions.ProductCategory.Delete, L("Permission:Catalog.ProductCategory.Delete"));
+
         //AddProduct
         var productPermission = catalogGroup.AddPermission(TeduEcommerceAdminPermissions.Product.Default, L("Permission:Catalog.Product"));
         productPermission.AddChild(TeduEcommerceAdminPermissions.Product.Create, L("Permission:Catalog.Product.Create"));

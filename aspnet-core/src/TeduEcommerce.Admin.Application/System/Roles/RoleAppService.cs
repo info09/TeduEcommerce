@@ -17,6 +17,7 @@ using Volo.Abp.SimpleStateChecking;
 
 namespace TeduEcommerce.Admin.System.Roles
 {
+    [Authorize(IdentityPermissions.Roles.Default, Policy = "AdminOnly")]
     public class RoleAppService : CrudAppService<IdentityRole, RoleDto, Guid, PagedResultRequestDto, CreateUpdateRoleDto, CreateUpdateRoleDto>, IRoleAppService
     {
         protected PermissionManagementOptions Options { get; }
@@ -33,14 +34,22 @@ namespace TeduEcommerce.Admin.System.Roles
             PermissionManager = permissionManager;
             PermissionDefinitionManager = permissionDefinitionManager;
             SimpleStateCheckerManager = simpleStateCheckerManager;
+
+            GetPolicyName = IdentityPermissions.Roles.Default;
+            GetListPolicyName = IdentityPermissions.Roles.Default;
+            CreatePolicyName = IdentityPermissions.Roles.Create;
+            UpdatePolicyName = IdentityPermissions.Roles.Update;
+            DeletePolicyName = IdentityPermissions.Roles.Delete;
         }
 
+        [Authorize(IdentityPermissions.Roles.Delete)]
         public async Task DeleteMulti(IEnumerable<Guid> ids)
         {
             await Repository.DeleteManyAsync(ids);
             await UnitOfWorkManager.Current.SaveChangesAsync();
         }
 
+        [Authorize(IdentityPermissions.Roles.Default)]
         public async Task<List<RoleInListDto>> GetListAllAsync()
         {
             var query = await Repository.GetQueryableAsync();
@@ -49,6 +58,7 @@ namespace TeduEcommerce.Admin.System.Roles
             return ObjectMapper.Map<List<IdentityRole>, List<RoleInListDto>>(data);
         }
 
+        [Authorize(IdentityPermissions.Roles.Default)]
         public async Task<PagedResultDto<RoleInListDto>> GetListFilterAsync(BaseListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();
@@ -60,6 +70,7 @@ namespace TeduEcommerce.Admin.System.Roles
             return new PagedResultDto<RoleInListDto> { TotalCount = totalCount, Items = ObjectMapper.Map<List<IdentityRole>, List<RoleInListDto>>(data) };
         }
 
+        [Authorize(IdentityPermissions.Roles.Create)]
         public override async Task<RoleDto> CreateAsync(CreateUpdateRoleDto input)
         {
             var query = await Repository.GetQueryableAsync();
@@ -74,6 +85,7 @@ namespace TeduEcommerce.Admin.System.Roles
             return ObjectMapper.Map<IdentityRole, RoleDto>(data);
         }
 
+        [Authorize(IdentityPermissions.Roles.Update)]
         public override async Task<RoleDto> UpdateAsync(Guid id, CreateUpdateRoleDto input)
         {
             var role = await Repository.GetAsync(id);
@@ -90,6 +102,7 @@ namespace TeduEcommerce.Admin.System.Roles
             return ObjectMapper.Map<IdentityRole, RoleDto>(data);
         }
 
+        [Authorize(IdentityPermissions.Roles.Default)]
         public async Task<GetPermissionListResultDto> GetPermissionAsync(string providerName, string providerKey)
         {
             var result = new GetPermissionListResultDto()
@@ -170,6 +183,7 @@ namespace TeduEcommerce.Admin.System.Roles
             };
         }
 
+        [Authorize(IdentityPermissions.Roles.Update)]
         public virtual async Task UpdatePermissionsAsync(string providerName, string providerKey, UpdatePermissionsDto input)
         {
             // await CheckProviderPolicy(providerName);

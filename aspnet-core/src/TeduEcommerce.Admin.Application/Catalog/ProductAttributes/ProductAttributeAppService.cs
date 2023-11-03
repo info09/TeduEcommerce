@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TeduEcommerce.Admin.Permissions;
 using TeduEcommerce.ProductAttributes;
 using TeduEcommerce.Products;
 using Volo.Abp.Application.Dtos;
@@ -11,7 +12,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace TeduEcommerce.Admin.Catalog.ProductAttributes
 {
-    [Authorize]
+    [Authorize(TeduEcommerceAdminPermissions.Attribute.Default, Policy = "AdminOnly")]
     public class ProductAttributeAppService : CrudAppService<ProductAttribute, ProductAttributeDto, Guid, PagedResultRequestDto, CreateUpdateProductAttributeDto, CreateUpdateProductAttributeDto>, IProductAttributeAppService
     {
         private readonly ProductAttributeCodeGenerator _productAttributeCodeGenerator;
@@ -19,14 +20,22 @@ namespace TeduEcommerce.Admin.Catalog.ProductAttributes
                                             ProductAttributeCodeGenerator productAttributeCodeGenerator) : base(repository)
         {
             _productAttributeCodeGenerator = productAttributeCodeGenerator;
+
+            GetPolicyName = TeduEcommerceAdminPermissions.Attribute.Default;
+            GetListPolicyName = TeduEcommerceAdminPermissions.Attribute.Default;
+            CreatePolicyName = TeduEcommerceAdminPermissions.Attribute.Create;
+            UpdatePolicyName = TeduEcommerceAdminPermissions.Attribute.Update;
+            DeletePolicyName = TeduEcommerceAdminPermissions.Attribute.Delete;
         }
 
+        [Authorize(TeduEcommerceAdminPermissions.Attribute.Delete)]
         public async Task DeleteMulti(IEnumerable<Guid> ids)
         {
             await Repository.DeleteManyAsync(ids);
             await UnitOfWorkManager.Current.SaveChangesAsync();
         }
 
+        [Authorize(TeduEcommerceAdminPermissions.Attribute.Default)]
         public async Task<List<ProductAttributeInListDto>> GetListAllAsync()
         {
             var query = await Repository.GetQueryableAsync();
@@ -36,6 +45,7 @@ namespace TeduEcommerce.Admin.Catalog.ProductAttributes
             return ObjectMapper.Map<List<ProductAttribute>, List<ProductAttributeInListDto>>(data);
         }
 
+        [Authorize(TeduEcommerceAdminPermissions.Attribute.Default)]
         public async Task<PagedResultDto<ProductAttributeInListDto>> GetListFilterAsync(BaseListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();

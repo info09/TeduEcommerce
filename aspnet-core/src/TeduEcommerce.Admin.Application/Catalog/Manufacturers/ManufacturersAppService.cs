@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TeduEcommerce.Admin.Permissions;
 using TeduEcommerce.Manufacturers;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -10,19 +11,26 @@ using Volo.Abp.Domain.Repositories;
 
 namespace TeduEcommerce.Admin.Catalog.Manufacturers
 {
-    [Authorize]
+    [Authorize(TeduEcommerceAdminPermissions.Manufacturer.Default, Policy = "AdminOnly")]
     public class ManufacturersAppService : CrudAppService<Manufacturer, ManufacturerDto, Guid, PagedResultRequestDto, CreateUpdateManufacturerDto, CreateUpdateManufacturerDto>, IManufacturersAppService
     {
         public ManufacturersAppService(IRepository<Manufacturer, Guid> repository) : base(repository)
         {
+            GetPolicyName = TeduEcommerceAdminPermissions.Manufacturer.Default;
+            GetListPolicyName = TeduEcommerceAdminPermissions.Manufacturer.Default;
+            CreatePolicyName = TeduEcommerceAdminPermissions.Manufacturer.Create;
+            UpdatePolicyName = TeduEcommerceAdminPermissions.Manufacturer.Update;
+            DeletePolicyName = TeduEcommerceAdminPermissions.Manufacturer.Delete;
         }
 
+        [Authorize(TeduEcommerceAdminPermissions.Manufacturer.Delete)]
         public async Task DeleteMultipleAsync(IEnumerable<Guid> ids)
         {
             await Repository.DeleteManyAsync(ids);
             await UnitOfWorkManager.Current.SaveChangesAsync();
         }
 
+        [Authorize(TeduEcommerceAdminPermissions.Manufacturer.Default)]
         public async Task<List<ManufacturerInListDto>> GetListAllAsync()
         {
             var query = await Repository.GetQueryableAsync();
@@ -32,6 +40,7 @@ namespace TeduEcommerce.Admin.Catalog.Manufacturers
             return ObjectMapper.Map<List<Manufacturer>, List<ManufacturerInListDto>>(data);
         }
 
+        [Authorize(TeduEcommerceAdminPermissions.Manufacturer.Default)]
         public async Task<PagedResultDto<ManufacturerInListDto>> GetListFilterAsync(BaseListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();
