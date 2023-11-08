@@ -4,11 +4,11 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>TeduEcommerce.Admin</RootNamespace>
+    <RootNamespace>TeduEcommerce.Public</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TeduEcommerce.Admin.Application\TeduEcommerce.Admin.Application.csproj" />
+    <ProjectReference Include="..\..\src\TeduEcommerce.Public.Application\TeduEcommerce.Public.Application.csproj" />
     <ProjectReference Include="..\TeduEcommerce.Domain.Tests\TeduEcommerce.Domain.Tests.csproj" />
     <ProjectReference Include="..\TeduEcommerce.TestBase\TeduEcommerce.TestBase.csproj" />
   </ItemGroup>
