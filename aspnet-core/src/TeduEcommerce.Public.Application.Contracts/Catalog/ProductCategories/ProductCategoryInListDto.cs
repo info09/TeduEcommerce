@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
 namespace TeduEcommerce.Public.Catalog.ProductCategories
@@ -14,5 +15,7 @@ namespace TeduEcommerce.Public.Catalog.ProductCategories
         public bool IsActive { get; set; }
         public Guid? ParentId { get; set; }
         public string SeoMetaDescription { get; set; }
+
+        public List<ProductCategoryInListDto> Children { get; set; } = new List<ProductCategoryInListDto>();
     }
 }
