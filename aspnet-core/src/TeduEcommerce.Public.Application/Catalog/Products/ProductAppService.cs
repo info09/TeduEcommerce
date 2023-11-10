@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TeduEcommerce.ProductAttributes;
 using TeduEcommerce.Products;
 using TeduEcommerce.Public.Catalog.Products.Attributes;
+using Volo.Abp.Account;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.BlobStoring;
@@ -161,6 +162,16 @@ namespace TeduEcommerce.Public.Catalog.Products
             var data = await AsyncExecuter.ToListAsync(query.OrderByDescending(i => i.Label).Skip(input.SkipCount).Take(input.MaxResultCount));
 
             return new PagedResultDto<ProductAttributeValueDto>(totalCount, data);
+        }
+
+        public async Task<List<ProductInListDto>> GetListTopSellerAsync(int numberOfRecords)
+        {
+            var query = await Repository.GetQueryableAsync();
+
+            query = query.Where(i => i.IsActive);
+            var data = await AsyncExecuter.ToListAsync(query.OrderByDescending(i => i.CreationTime).Take(numberOfRecords));
+
+            return ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data);
         }
 
         public async Task<string> GetThumbnailImageAsync(string fileName)
