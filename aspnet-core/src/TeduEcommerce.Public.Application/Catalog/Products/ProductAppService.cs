@@ -51,16 +51,16 @@ namespace TeduEcommerce.Public.Catalog.Products
             return ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data);
         }
 
-        public async Task<PagedResultDto<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input)
+        public async Task<PagedResult<ProductInListDto>> GetListFilterAsync(ProductListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();
             query = query.WhereIf(!string.IsNullOrEmpty(input.Keyword), i => i.Name.ToLower().Contains(input.Keyword.ToLower()));
             query = query.WhereIf(input.CategoryId.HasValue, i => i.CategoryId == input.CategoryId.Value);
 
             var totalCount = await AsyncExecuter.LongCountAsync(query);
-            var data = await AsyncExecuter.ToListAsync(query.OrderByDescending(i => i.CreationTime).Skip(input.SkipCount).Take(input.MaxResultCount));
+            var data = await AsyncExecuter.ToListAsync(query.OrderByDescending(i => i.CreationTime).Skip((input.CurrentPage) * input.PageSize).Take(input.PageSize));
 
-            return new PagedResultDto<ProductInListDto>(totalCount, ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data));
+            return new PagedResult<ProductInListDto>(ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data), totalCount, input.CurrentPage, input.PageSize);
         }
 
         public async Task<List<ProductAttributeValueDto>> GetListProductAttributeAllAsync(Guid productId)
@@ -112,7 +112,7 @@ namespace TeduEcommerce.Public.Catalog.Products
             return await AsyncExecuter.ToListAsync(query);
         }
 
-        public async Task<PagedResultDto<ProductAttributeValueDto>> GetListProductAttributesAsync(ProductAttributeListFilterDto input)
+        public async Task<PagedResult<ProductAttributeValueDto>> GetListProductAttributesAsync(ProductAttributeListFilterDto input)
         {
             var attributeQuery = await _productAttribute.GetQueryableAsync();
             var attributeDateTimeQuery = await _productAttributeDateTime.GetQueryableAsync();
@@ -159,9 +159,9 @@ namespace TeduEcommerce.Public.Catalog.Products
             query = query.Where(i => i.DateTimeId != null || i.IntId != null || i.DecimalId != null || i.TextId != null || i.VarcharId != null);
 
             var totalCount = await AsyncExecuter.LongCountAsync(query);
-            var data = await AsyncExecuter.ToListAsync(query.OrderByDescending(i => i.Label).Skip(input.SkipCount).Take(input.MaxResultCount));
+            var data = await AsyncExecuter.ToListAsync(query.OrderByDescending(i => i.Label).Skip((input.CurrentPage) * input.PageSize).Take(input.PageSize));
 
-            return new PagedResultDto<ProductAttributeValueDto>(totalCount, data);
+            return new PagedResult<ProductAttributeValueDto>(data, totalCount, input.CurrentPage, input.PageSize);
         }
 
         public async Task<List<ProductInListDto>> GetListTopSellerAsync(int numberOfRecords)

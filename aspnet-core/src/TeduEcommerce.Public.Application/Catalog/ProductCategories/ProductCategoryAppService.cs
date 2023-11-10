@@ -11,8 +11,16 @@ namespace TeduEcommerce.Public.Catalog.ProductCategories
 {
     public class ProductCategoryAppService : ReadOnlyAppService<ProductCategory, ProductCategoryDto, Guid, PagedResultRequestDto>, IProductCategoryAppService
     {
-        public ProductCategoryAppService(IReadOnlyRepository<ProductCategory, Guid> repository) : base(repository)
+        private readonly IRepository<ProductCategory, Guid> _productCategoryRepository;
+        public ProductCategoryAppService(IRepository<ProductCategory, Guid> repository) : base(repository)
         {
+            this._productCategoryRepository = repository;
+        }
+
+        public async Task<ProductCategoryDto> GetByCodeAsync(string code)
+        {
+            var category = await _productCategoryRepository.GetAsync(i => i.Code == code);
+            return ObjectMapper.Map<ProductCategory, ProductCategoryDto>(category);
         }
 
         public async Task<List<ProductCategoryInListDto>> GetListAllAsync()
@@ -25,16 +33,16 @@ namespace TeduEcommerce.Public.Catalog.ProductCategories
             return ObjectMapper.Map<List<ProductCategory>, List<ProductCategoryInListDto>>(data);
         }
 
-        public async Task<PagedResultDto<ProductCategoryInListDto>> GetListFilterAsync(BaseListFilterDto input)
+        public async Task<PagedResult<ProductCategoryInListDto>> GetListFilterAsync(BaseListFilterDto input)
         {
             var query = await Repository.GetQueryableAsync();
             query = query.WhereIf(!string.IsNullOrWhiteSpace(input.Keyword), i => i.Name.ToLower().Contains(input.Keyword.ToLower()));
 
             var totalCount = await AsyncExecuter.LongCountAsync(query);
 
-            var data = await AsyncExecuter.ToListAsync(query.OrderByDescending(i => i.CreationTime).Skip(input.SkipCount).Take(input.MaxResultCount));
+            var data = await AsyncExecuter.ToListAsync(query.OrderByDescending(i => i.CreationTime).Skip((input.CurrentPage) * input.PageSize).Take(input.PageSize));
 
-            return new PagedResultDto<ProductCategoryInListDto>(totalCount, ObjectMapper.Map<List<ProductCategory>, List<ProductCategoryInListDto>>(data));
+            return new PagedResult<ProductCategoryInListDto>(ObjectMapper.Map<List<ProductCategory>, List<ProductCategoryInListDto>>(data), totalCount, input.CurrentPage, input.PageSize);
         }
     }
 }
