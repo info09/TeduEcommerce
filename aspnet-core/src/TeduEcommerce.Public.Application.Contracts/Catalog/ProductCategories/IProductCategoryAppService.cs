@@ -10,6 +10,7 @@ namespace TeduEcommerce.Public.Catalog.ProductCategories
     public interface IProductCategoryAppService : IReadOnlyAppService<ProductCategoryDto, Guid, PagedResultRequestDto>
     {
         Task<List<ProductCategoryInListDto>> GetListAllAsync();
-        Task<PagedResultDto<ProductCategoryInListDto>> GetListFilterAsync(BaseListFilterDto input);
+        Task<PagedResult<ProductCategoryInListDto>> GetListFilterAsync(BaseListFilterDto input);
+        Task<ProductCategoryDto> GetByCodeAsync(string code);
     }
 }

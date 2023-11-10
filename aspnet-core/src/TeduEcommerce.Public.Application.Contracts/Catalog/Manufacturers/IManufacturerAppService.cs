@@ -9,6 +9,6 @@ namespace TeduEcommerce.Public.Catalog.Manufacturers
     public interface IManufacturerAppService : IReadOnlyAppService<ManufacturerDto, Guid, PagedResultRequestDto>
     {
         Task<List<ManufacturerInListDto>> GetListAllAsync();
-        Task<PagedResultDto<ManufacturerInListDto>> GetListFilterAsync(BaseListFilterDto input);
+        Task<PagedResult<ManufacturerInListDto>> GetListFilterAsync(BaseListFilterDto input);
     }
 }
