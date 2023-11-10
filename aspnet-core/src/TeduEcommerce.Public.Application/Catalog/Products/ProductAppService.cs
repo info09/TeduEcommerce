@@ -58,7 +58,7 @@ namespace TeduEcommerce.Public.Catalog.Products
             query = query.WhereIf(input.CategoryId.HasValue, i => i.CategoryId == input.CategoryId.Value);
 
             var totalCount = await AsyncExecuter.LongCountAsync(query);
-            var data = await AsyncExecuter.ToListAsync(query.OrderByDescending(i => i.CreationTime).Skip((input.CurrentPage) * input.PageSize).Take(input.PageSize));
+            var data = await AsyncExecuter.ToListAsync(query.OrderByDescending(i => i.CreationTime).Skip((input.CurrentPage - 1) * input.PageSize).Take(input.PageSize));
 
             return new PagedResult<ProductInListDto>(ObjectMapper.Map<List<Product>, List<ProductInListDto>>(data), totalCount, input.CurrentPage, input.PageSize);
         }
