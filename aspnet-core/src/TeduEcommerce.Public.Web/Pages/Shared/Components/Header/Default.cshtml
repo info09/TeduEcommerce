@@ -48,7 +48,7 @@
     <div class="container">
         <div class="main-header">
             <div class="header-left">
-                <div class="header-logo"><a class="d-flex" href="/"><img alt="Ecom" src="/assets/imgs/template/logo.svg"></a></div>
+                <div class="header-logo"><a class="d-flex" href="index.html"><img alt="Ecom" src="/assets/imgs/template/logo.svg"></a></div>
                 <div class="header-search">
                     <div class="box-header-search">
                         <form class="form-search" method="post" action="#">
@@ -71,14 +71,14 @@
                     <nav class="nav-main-menu d-none d-xl-block">
                         <ul class="main-menu">
                             <li>
-                                <a class="active" href="index.html">Home</a>
+                                <a class="active" href="/">Home</a>
                             </li>
                             <li class="has-children">
                                 <a href="shop-grid.html">Product</a>
                                 <ul class="sub-menu two-col">
                                     @foreach (var item in Model)
                                     {
-                                        <li><a href="/products/@(item.Code)">@item.Name</a></li>
+                                        <li><a href="/products/@(item.Code).html">@item.Name</a></li>
                                     }
                                 </ul>
                             </li>
@@ -119,19 +119,35 @@
                     <div class="burger-icon burger-icon-white"><span class="burger-icon-top"></span><span class="burger-icon-mid"></span><span class="burger-icon-bottom"></span></div>
                 </div>
                 <div class="header-shop">
-                    <div class="d-inline-block box-dropdown-cart">
-                        <span class="font-lg icon-list icon-account"><span>Account</span></span>
-                        <div class="dropdown-account">
-                            <ul>
-                                <li><a href="page-account.html">My Account</a></li>
-                                <li><a href="page-account.html">Order Tracking</a></li>
-                                <li><a href="page-account.html">My Orders</a></li>
-                                <li><a href="page-account.html">My Wishlist</a></li>
-                                <li><a href="page-account.html">Setting</a></li>
-                                <li><a href="page-login.html">Sign out</a></li>
-                            </ul>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="d-inline-block box-dropdown-cart">
+                            <span class="font-lg icon-list icon-account"><span>Account</span></span>
+                            <div class="dropdown-account">
+                                <ul>
+                                    <li><a href="page-account.html">My Account</a></li>
+                                    <li><a href="page-account.html">Order Tracking</a></li>
+                                    <li><a href="page-account.html">My Orders</a></li>
+                                    <li><a href="page-account.html">My Wishlist</a></li>
+                                    <li><a href="page-account.html">Setting</a></li>
+                                    <li><a href="/logout.html">Sign out</a></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div><a class="font-lg icon-list icon-wishlist" href="shop-wishlist.html"><span>Wishlist</span><span class="number-item font-xs">5</span></a>
+                        <a class="font-lg icon-list icon-wishlist" href="shop-wishlist.html"><span>Wishlist</span><span class="number-item font-xs">5</span></a>
+                    }
+                    else
+                    {
+                        <div class="d-inline-block box-dropdown-cart">
+                            <span class="font-lg icon-list icon-account"><span>Login/Register</span></span>
+                            <div class="dropdown-account">
+                                <ul>
+                                    <li><a href="/login.html">Login</a></li>
+                                    <li><a href="/register.html">Register</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    }
                     <div class="d-inline-block box-dropdown-cart">
                         <span class="font-lg icon-list icon-cart"><span>Cart</span><span class="number-item font-xs">2</span></span>
                         <div class="dropdown-cart">
@@ -175,16 +191,37 @@
                 <div class="mobile-menu-wrap mobile-header-border">
                     <nav class="mt-15">
                         <ul class="mobile-menu font-heading">
-                            <li>
+                            <li class="has-children">
                                 <a class="active" href="index.html">Home</a>
+                                <ul class="sub-menu">
+                                    <li><a href="index.html">Homepage - 1</a></li>
+                                    <li><a href="index-2.html">Homepage - 2</a></li>
+                                    <li><a href="index-3.html">Homepage - 3</a></li>
+                                    <li><a href="index-4.html">Homepage - 4</a></li>
+                                    <li><a href="index-5.html">Homepage - 5</a></li>
+                                    <li><a href="index-6.html">Homepage - 6</a></li>
+                                    <li><a href="index-7.html">Homepage - 7</a></li>
+                                    <li><a href="index-8.html">Homepage - 8</a></li>
+                                    <li><a href="index-9.html">Homepage - 9</a></li>
+                                    <li><a href="index-10.html">Homepage - 10</a></li>
+                                </ul>
                             </li>
                             <li class="has-children">
-                                <a href="shop-grid.html">Product</a>
+                                <a href="shop-grid.html">Shop</a>
                                 <ul class="sub-menu">
-                                    @foreach (var item in Model)
-                                    {
-                                        <li><a href="/products/@(item.Code)">@item.Name</a></li>
-                                    }
+                                    <li><a href="shop-grid.html">Shop Grid</a></li>
+                                    <li><a href="shop-grid-2.html">Shop Grid 2</a></li>
+                                    <li><a href="shop-list.html">Shop List</a></li>
+                                    <li><a href="shop-list-2.html">Shop List 2</a></li>
+                                    <li><a href="shop-fullwidth.html">Shop Fullwidth</a></li>
+                                    <li><a href="shop-single-product.html">Single Product</a></li>
+                                    <li><a href="shop-single-product-2.html">Single Product 2</a></li>
+                                    <li><a href="shop-single-product-3.html">Single Product 3</a></li>
+                                    <li><a href="shop-single-product-4.html">Single Product 4</a></li>
+                                    <li><a href="shop-cart.html">Shop Cart</a></li>
+                                    <li><a href="shop-checkout.html">Shop Checkout</a></li>
+                                    <li><a href="shop-compare.html">Shop Compare</a></li>
+                                    <li><a href="shop-wishlist.html">Shop Wishlist</a></li>
                                 </ul>
                             </li>
                             <li class="has-children">
@@ -222,25 +259,39 @@
                         </ul>
                     </nav>
                 </div>
-                <div class="mobile-account">
-                    <div class="mobile-header-top">
-                        <div class="user-account">
-                            <a href="page-account.html"><img src="/assets/imgs/template/ava_1.png" alt="Ecom"></a>
-                            <div class="content">
-                                <h6 class="user-name">Hello<span class="text-brand"> Steven !</span></h6>
-                                <p class="font-xs text-muted">You have 3 new messages</p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="mobile-account">
+                        <div class="mobile-header-top">
+                            <div class="user-account">
+                                <a href="page-account.html"><img src="/assets/imgs/template/ava_1.png" alt="Ecom"></a>
+                                <div class="content">
+                                    <h6 class="user-name">Hello<span class="text-brand"> Steven !</span></h6>
+                                    <p class="font-xs text-muted">You have 3 new messages</p>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="mobile-menu">
+                            <li><a href="page-account.html">My Account</a></li>
+                            <li><a href="page-account.html">Order Tracking</a></li>
+                            <li><a href="page-account.html">My Orders</a></li>
+                            <li><a href="page-account.html">My Wishlist</a></li>
+                            <li><a href="page-account.html">Setting</a></li>
+                            <li><a href="page-login.html">Sign out</a></li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div class="mobile-account">
+                        <div class="mobile-header-top">
+                            <div class="user-account">
+                                <a href="/login.html">Login</a>
+
                             </div>
                         </div>
                     </div>
-                    <ul class="mobile-menu">
-                        <li><a href="page-account.html">My Account</a></li>
-                        <li><a href="page-account.html">Order Tracking</a></li>
-                        <li><a href="page-account.html">My Orders</a></li>
-                        <li><a href="page-account.html">My Wishlist</a></li>
-                        <li><a href="page-account.html">Setting</a></li>
-                        <li><a href="page-login.html">Sign out</a></li>
-                    </ul>
-                </div>
+                }
                 <div class="mobile-banner">
                     <div class="bg-5 block-iphone">
                         <span class="color-brand-3 font-sm-lh32">Starting from $899</span>
@@ -444,37 +495,16 @@
                 <div class="mobile-menu-wrap mobile-header-border">
                     <nav class="mt-15">
                         <ul class="mobile-menu font-heading">
-                            <li class="has-children">
-                                <a class="active" href="index.html">Home</a>
-                                <ul class="sub-menu">
-                                    <li><a href="index.html">Homepage - 1</a></li>
-                                    <li><a href="index-2.html">Homepage - 2</a></li>
-                                    <li><a href="index-3.html">Homepage - 3</a></li>
-                                    <li><a href="index-4.html">Homepage - 4</a></li>
-                                    <li><a href="index-5.html">Homepage - 5</a></li>
-                                    <li><a href="index-6.html">Homepage - 6</a></li>
-                                    <li><a href="index-7.html">Homepage - 7</a></li>
-                                    <li><a href="index-8.html">Homepage - 8</a></li>
-                                    <li><a href="index-9.html">Homepage - 9</a></li>
-                                    <li><a href="index-10.html">Homepage - 10</a></li>
-                                </ul>
+                            <li>
+                                <a class="active" href="/">Home</a>
                             </li>
                             <li class="has-children">
-                                <a href="shop-grid.html">Shop</a>
+                                <a href="shop-grid.html">Products</a>
                                 <ul class="sub-menu">
-                                    <li><a href="shop-grid.html">Shop Grid</a></li>
-                                    <li><a href="shop-grid-2.html">Shop Grid 2</a></li>
-                                    <li><a href="shop-list.html">Shop List</a></li>
-                                    <li><a href="shop-list-2.html">Shop List 2</a></li>
-                                    <li><a href="shop-fullwidth.html">Shop Fullwidth</a></li>
-                                    <li><a href="shop-single-product.html">Single Product</a></li>
-                                    <li><a href="shop-single-product-2.html">Single Product 2</a></li>
-                                    <li><a href="shop-single-product-3.html">Single Product 3</a></li>
-                                    <li><a href="shop-single-product-4.html">Single Product 4</a></li>
-                                    <li><a href="shop-cart.html">Shop Cart</a></li>
-                                    <li><a href="shop-checkout.html">Shop Checkout</a></li>
-                                    <li><a href="shop-compare.html">Shop Compare</a></li>
-                                    <li><a href="shop-wishlist.html">Shop Wishlist</a></li>
+                                    @foreach (var item in Model)
+                                    {
+                                        <li><a href="/products/@(item.Code).html">@item.Name</a></li>
+                                    }
                                 </ul>
                             </li>
                             <li class="has-children">
@@ -512,25 +542,40 @@
                         </ul>
                     </nav>
                 </div>
-                <div class="mobile-account">
-                    <div class="mobile-header-top">
-                        <div class="user-account">
-                            <a href="page-account.html"><img src="/assets/imgs/template/ava_1.png" alt="Ecom"></a>
-                            <div class="content">
-                                <h6 class="user-name">Hello<span class="text-brand"> Steven !</span></h6>
-                                <p class="font-xs text-muted">You have 3 new messages</p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="mobile-account">
+                        <div class="mobile-header-top">
+                            <div class="user-account">
+                                <a href="page-account.html"><img src="/assets/imgs/template/ava_1.png" alt="Ecom"></a>
+                                <div class="content">
+                                    <h6 class="user-name">Hello<span class="text-brand"> Steven !</span></h6>
+                                    <p class="font-xs text-muted">You have 3 new messages</p>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="mobile-menu">
+                            <li><a href="page-account.html">My Account</a></li>
+                            <li><a href="page-account.html">Order Tracking</a></li>
+                            <li><a href="page-account.html">My Orders</a></li>
+                            <li><a href="page-account.html">My Wishlist</a></li>
+                            <li><a href="page-account.html">Setting</a></li>
+                            <li><a href="page-login.html">Sign out</a></li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <div class="mobile-account">
+                        <div class="mobile-header-top">
+                            <div class="user-account">
+                                <a href="/login.html">Login</a>
                             </div>
                         </div>
                     </div>
-                    <ul class="mobile-menu">
-                        <li><a href="page-account.html">My Account</a></li>
-                        <li><a href="page-account.html">Order Tracking</a></li>
-                        <li><a href="page-account.html">My Orders</a></li>
-                        <li><a href="page-account.html">My Wishlist</a></li>
-                        <li><a href="page-account.html">Setting</a></li>
-                        <li><a href="page-login.html">Sign out</a></li>
-                    </ul>
-                </div>
+
+                }
+
                 <div class="mobile-banner">
                     <div class="bg-5 block-iphone">
                         <span class="color-brand-3 font-sm-lh32">Starting from $899</span>
