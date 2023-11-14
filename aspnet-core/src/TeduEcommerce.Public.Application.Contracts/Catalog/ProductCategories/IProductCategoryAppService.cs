@@ -12,5 +12,6 @@ namespace TeduEcommerce.Public.Catalog.ProductCategories
         Task<List<ProductCategoryInListDto>> GetListAllAsync();
         Task<PagedResult<ProductCategoryInListDto>> GetListFilterAsync(BaseListFilterDto input);
         Task<ProductCategoryDto> GetByCodeAsync(string code);
+        Task<ProductCategoryDto> GetBySlugAsync(string slug);
     }
 }

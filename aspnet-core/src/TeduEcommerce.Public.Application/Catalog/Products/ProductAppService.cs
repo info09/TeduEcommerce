@@ -23,6 +23,7 @@ namespace TeduEcommerce.Public.Catalog.Products
         private readonly IRepository<ProductAttributeDecimal> _productAttributeDecimal;
         private readonly IRepository<ProductAttributeDateTime> _productAttributeDateTime;
         private readonly IRepository<ProductAttributeVarchar> _productAttributeVarchar;
+        private readonly IRepository<Product> _productRepository;
         public ProductAppService(IReadOnlyRepository<Product, Guid> repository,
                                 IBlobContainer<ProductThumbnailPictureContainer> fileContainer,
                                 IRepository<ProductAttribute> productAttribute,
@@ -30,7 +31,8 @@ namespace TeduEcommerce.Public.Catalog.Products
                                 IRepository<ProductAttributeInt> productAttributeInt,
                                 IRepository<ProductAttributeDecimal> productAttributeDecimal,
                                 IRepository<ProductAttributeDateTime> productAttributeDateTime,
-                                IRepository<ProductAttributeVarchar> productAttributeVarchar) : base(repository)
+                                IRepository<ProductAttributeVarchar> productAttributeVarchar,
+                                IRepository<Product> productRepository) : base(repository)
         {
             this._fileContainer = fileContainer;
             this._productAttribute = productAttribute;
@@ -39,6 +41,13 @@ namespace TeduEcommerce.Public.Catalog.Products
             this._productAttributeDateTime = productAttributeDateTime;
             this._productAttributeText = productAttributeText;
             this._productAttributeVarchar = productAttributeVarchar;
+            this._productRepository = productRepository;
+        }
+
+        public async Task<ProductDto> GetBySlugAsync(string slug)
+        {
+            var product = await _productRepository.GetAsync(i => i.Slug == slug);
+            return ObjectMapper.Map<Product, ProductDto>(product);
         }
 
         public async Task<List<ProductInListDto>> GetListAllAsync()

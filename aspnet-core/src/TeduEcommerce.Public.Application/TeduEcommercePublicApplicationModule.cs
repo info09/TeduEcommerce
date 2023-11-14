@@ -37,7 +37,7 @@ public class TeduEcommercePublicApplicationModule : AbpModule
             {
                 container.UseFileSystem(fileSystem =>
                 {
-                    fileSystem.BasePath = "C:\\my-file";
+                    fileSystem.BasePath = "C:\\tedu-ecommerce";
                 });
             });
         });

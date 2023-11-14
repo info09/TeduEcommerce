@@ -48,16 +48,15 @@
                 </div>
                 <div class="row mt-20">
 
-                        @foreach (var item in Model.ProductData.Results)
-                        {
+                    @foreach (var item in Model.ProductData.Results)
+                    {
                         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12">
                             <partial name="_ProductItem1" model="item" />
-                        
+
                         </div>
-                        }
-                    </div>
+                    }
                 </div>
-               <partial name="_Paginator" model="Model.ProductData" />
+                <partial name="_Paginator" model="Model.ProductData" />
             </div>
             <div class="col-lg-3 order-last order-lg-first">
                 <div class="sidebar-border mb-0">
