@@ -11,4 +11,6 @@ public static class TeduEcommerceConsts
 
     public const string ProductAttributeIdentitySettingId = "ProductAttribute";
     public const string ProductAttributeIdentitySettingPrefix = "PA";
+
+    public const string Cart = "Cart";
 }

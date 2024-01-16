@@ -1,15 +1,23 @@
-using System.IO;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TeduEcommerce.Public.Web.Menus;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.OpenApi.Models;
-using OpenIddict.Validation.AspNetCore;
+using System;
+using System.IO;
+using TeduEcommerce.EntityFrameworkCore;
+using TeduEcommerce.Localization;
+using TeduEcommerce.MultiTenancy;
+using TeduEcommerce.Public.Web.Menus;
 using Volo.Abp;
+using Volo.Abp.Account;
 using Volo.Abp.Account.Web;
+using Volo.Abp.AspNetCore.Authentication.OAuth;
+using Volo.Abp.AspNetCore.Authentication.OpenIdConnect;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.AspNetCore.Mvc.Localization;
 using Volo.Abp.AspNetCore.Mvc.UI.Bundling;
@@ -19,28 +27,18 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
+using Volo.Abp.Caching.StackExchangeRedis;
+using Volo.Abp.Http.Client.IdentityModel.Web;
+using Volo.Abp.Identity.AspNetCore;
 using Volo.Abp.Identity.Web;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
 using Volo.Abp.SettingManagement.Web;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.TenantManagement.Web;
-using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.UI.Navigation;
+using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
-using TeduEcommerce.Localization;
-using TeduEcommerce.MultiTenancy;
-using TeduEcommerce.EntityFrameworkCore;
-using Volo.Abp.Caching.StackExchangeRedis;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using System;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Volo.Abp.AspNetCore.Authentication.OAuth;
-using Volo.Abp.AspNetCore.Authentication.OpenIdConnect;
-using Volo.Abp.Http.Client.IdentityModel.Web;
-using Volo.Abp.Identity.AspNetCore;
-using Volo.Abp.Account;
 
 namespace TeduEcommerce.Public.Web;
 
@@ -104,6 +102,10 @@ public class TeduEcommercePublicWebModule : AbpModule
         ConfigureNavigationServices();
         ConfigureAutoApiControllers();
         ConfigureSwaggerServices(context.Services);
+
+        context.Services.AddSession(options => {
+            options.IdleTimeout = TimeSpan.FromMinutes(30);
+        });
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
@@ -259,6 +261,8 @@ public class TeduEcommercePublicWebModule : AbpModule
         {
             app.UseErrorPage();
         }
+
+        app.UseSession();
 
         app.UseCorrelationId();
         app.UseStaticFiles();
